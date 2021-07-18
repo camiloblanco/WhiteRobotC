@@ -18,9 +18,18 @@
     <ClCompile Include="WhiteRobotC.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RobotMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WhiteRobot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MenuWhiteRobot.h">
+    <ClInclude Include="RobotMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WhiteRobot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

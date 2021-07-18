@@ -139,10 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="WhiteRobot.cpp" />
+    <ClCompile Include="RobotMenu.cpp" />
     <ClCompile Include="WhiteRobotC.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MenuWhiteRobot.h" />
+    <ClInclude Include="WhiteRobot.h" />
+    <ClInclude Include="RobotMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
