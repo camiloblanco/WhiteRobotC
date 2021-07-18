@@ -71,7 +71,7 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM;
 	cout << "Please enter the large window size (Example:40): " << endl;
 	cin >> maPointsL;
-	cout << "Please enter the minimun slope to establish a trende (Example:0.1): " << endl;
+	cout << "Please enter the minimun slope to establish a trend (Example:0.1): " << endl;
 	cin >> slopeMin;
 	cout << "Please enter the initial cash invesment (Exmple:10000) " << endl;
 	cin >> intialCash;

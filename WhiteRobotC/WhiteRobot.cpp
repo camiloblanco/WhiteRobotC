@@ -124,7 +124,7 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 		// Loop over the tradable part of the dataset
 		for (auto it = m_prices.begin() + slopePoints; it != m_prices.end(); ++it) {
 			vector<double> window;
-			window = vector < double >(it - slopePoints, it);
+			window = vector < double >(it - slopePoints+1, it+1);
 			vector<double> signals = generateSignals(window, maPointsS, maPointsM, maPointsL, slopePoints);
 			m_ma_small.push_back(signals[0]);
 			m_ma_medium.push_back(signals[1]);
