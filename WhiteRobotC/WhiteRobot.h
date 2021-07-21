@@ -27,7 +27,15 @@ public:
 	double movingSlope(const vector<double> prices, int windowSize);
 	vector<double> generateSignals(vector<double> prices, int maPointsS, int maPointsM, int maPointsL, int slopePoints);
 
-	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, int slopeMin, int intialCash);
+	
+	int stateAnalyser(); 
+	int whiteStateMachine(double slopeMin);
+	
+	double marketAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
+
+	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double intialCash);
+
+
 	void saveSimulation(string fileName);
 
 	~WhiteRobot();
@@ -42,7 +50,12 @@ private:
 	vector<double> m_ma_large;
 	vector<double> m_slope;
 
-	vector<double> m_order_signal;
+	int m_point;
+	int m_state;
+	vector<int> m_order_signal;
+
+	vector<double> m_portfolio_value;
+	vector<double> m_trade_profit;
 
 
 };

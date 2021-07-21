@@ -76,7 +76,9 @@ void RobotMenu::executeWhite () {
 	cout << "Please enter the initial cash invesment (Exmple:10000) " << endl;
 	cin >> intialCash;
 	robot.loadData("SPX500_USD_H4.CSV");
+
 	robot.whiteStrategy(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, intialCash);
+
 	robot.saveSimulation("portfolio_simulation.csv");
 
 	menuPause();
