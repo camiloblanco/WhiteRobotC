@@ -126,8 +126,27 @@ int WhiteRobot::stateAnalyser() {
 	
 }
 
-int WhiteRobot::whiteStateMachine(double slopeMin) {
+bool WhiteRobot::checkStopLoss(double stopLoss, double last_trade_investment) {
 
+	double curren_trade_profit = (m_portfolio_value[m_point] - last_trade_investment) / last_trade_investment;
+
+	if (curren_trade_profit < stopLoss) {
+		//m_stop_loss.push_back(1);
+		return true;
+	}
+	else {
+		//m_stop_loss.push_back(0);
+		return false;
+	}
+		
+}
+
+int WhiteRobot::whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment) {
+
+	/*if (checkStopLoss(stopLoss, last_trade_investment)) {
+		// Slop loss limit reached
+		m_state == 1;
+	}*/
 	if (m_state == 1) {
 		if (m_slope[m_point] > slopeMin) {
 			//positive trend
@@ -185,6 +204,7 @@ int WhiteRobot::whiteStateMachine(double slopeMin) {
 }
 
 
+
 double  WhiteRobot::marketAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units) {
 	
 	double portfolio_value;
@@ -229,11 +249,11 @@ double  WhiteRobot::marketAnalyser(double& current_cash, double& last_trade_inve
 }
 
 
-void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double intialCash) {
+void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash) {
 	cout << "Executing White strategy" << endl;
 
 	double current_cash = intialCash;
-	double last_trade_investment = 0;
+	double last_trade_investment = 1;
 	double cfd_units = 0;
 
 	if (slopePoints > maPointsL && maPointsL > maPointsM && maPointsM > maPointsS) {
@@ -246,6 +266,7 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 			m_slope.push_back(0.0);
 			m_order_signal.push_back(0);
 			m_portfolio_value.push_back(intialCash);
+			m_stop_loss.push_back(0);
 			++m_point;
 		}
 
@@ -258,7 +279,7 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 			m_ma_medium.push_back(signals[1]);
 			m_ma_large.push_back(signals[2]);
 			m_slope.push_back(signals[3]);
-			m_order_signal.push_back(whiteStateMachine(slopeMin));
+			m_order_signal.push_back(whiteStateMachine(slopeMin,stopLoss, last_trade_investment));
 			m_portfolio_value.push_back(marketAnalyser(current_cash, last_trade_investment, cfd_units));
 			++m_point;
 		}
@@ -280,11 +301,11 @@ void WhiteRobot::saveSimulation(string fileName) {
 	ofstream outFile(fileName);
 
 	// write the file headers
-	outFile << "date" << "," << "price" << "," << "ma_small" << "," << "ma_medium" << "," << "ma_large" << "," << "ma_slope" << "," << "order_signal" << "," << "portfolio_value" << endl;
+	outFile << "date" << "," << "price" << "," << "ma_small" << "," << "ma_medium" << "," << "ma_large" << "," << "ma_slope" << "," << "order_signal" << "," << "portfolio_value" << "stop_loss" << endl;
 
 	// write data to the file
 	for (int i = 0; i != m_prices.size(); i++) {
-		outFile << m_dates[i] << "," << m_prices[i] << "," << m_ma_small[i] << "," << m_ma_medium[i] << "," << m_ma_large[i] << "," << m_slope[i] << "," << m_order_signal[i] << "," << m_portfolio_value[i] << endl;
+		outFile << m_dates[i] << "," << m_prices[i] << "," << m_ma_small[i] << "," << m_ma_medium[i] << "," << m_ma_large[i] << "," << m_slope[i] << "," << m_order_signal[i] << "," << m_portfolio_value[i] << "," << m_stop_loss[i]<<endl;
 	}
 
 	// close the output file

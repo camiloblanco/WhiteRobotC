@@ -58,26 +58,28 @@ void RobotMenu::testData() {
 void RobotMenu::executeWhite () {
 	WhiteRobot robot;
 	int maPointsS, maPointsM, maPointsL, slopePoints;
-	double slopeMin, intialCash;
+	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
 	cout << "		White Robot C++ an algorimic trading program " << endl << endl;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
-	cout << "Please enter the Slope points (3 months its abour 395 points for H4): " << endl;
+	cout << "Please enter the number of points to use for calculating the Slepe (3 months its about 395 points for H4): " << endl;
 	cin >> slopePoints;
-	cout << "Please enter the small window size (Example:14): " << endl;
+	cout << "Please enter the small window points size (Example:14): " << endl;
 	cin >> maPointsS;
-	cout << "Please enter the medium window size (Example:21): " << endl;
+	cout << "Please enter the medium window points size (Example:21): " << endl;
 	cin >> maPointsM;
-	cout << "Please enter the large window size (Example:40): " << endl;
+	cout << "Please enter the large window points size (Example:40): " << endl;
 	cin >> maPointsL;
-	cout << "Please enter the minimun slope to establish a trend (Example:0.1): " << endl;
+	cout << "Please enter the minimun slope to establish a trend (Example:0.001): " << endl;
 	cin >> slopeMin;
+	cout << "Please enter the Stop-Loss parameter (Example:0.02): " << endl;
+	cin >> stopLoss;
 	cout << "Please enter the initial cash invesment (Exmple:10000) " << endl;
 	cin >> intialCash;
 	robot.loadData("SPX500_USD_H4.CSV");
 
-	robot.whiteStrategy(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, intialCash);
+	robot.whiteStrategy(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, intialCash);
 
 	robot.saveSimulation("portfolio_simulation.csv");
 

@@ -29,11 +29,14 @@ public:
 
 	
 	int stateAnalyser(); 
-	int whiteStateMachine(double slopeMin);
+
+	bool checkStopLoss(double stopLoss, double last_trade_investment);
+
+	int whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment);
 	
 	double marketAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
 
-	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double intialCash);
+	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash);
 
 
 	void saveSimulation(string fileName);
@@ -55,7 +58,7 @@ private:
 	vector<int> m_order_signal;
 
 	vector<double> m_portfolio_value;
-	vector<double> m_trade_profit;
+	vector<int> m_stop_loss;
 
 
 };
