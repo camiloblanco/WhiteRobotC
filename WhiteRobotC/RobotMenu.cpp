@@ -61,9 +61,10 @@ void RobotMenu::executeWhite () {
 	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
-	cout << "		White Robot C++ an algorimic trading program " << endl << endl;
+	cout << "		White Robot C++ an algorimic trading program " << endl ;
+	cout << "					Version 1.0.0					 " << endl << endl;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
-	cout << "Please enter the number of points to use for calculating the Slepe (3 months its about 395 points for H4): " << endl;
+	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
 	cin >> slopePoints;
 	cout << "Please enter the small window points size (Example:14): " << endl;
 	cin >> maPointsS;
@@ -73,9 +74,9 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsL;
 	cout << "Please enter the minimun slope to establish a trend (Example:0.001): " << endl;
 	cin >> slopeMin;
-	cout << "Please enter the Stop-Loss parameter (Example:0.02): " << endl;
+	cout << "Please enter the Stop-loss parameter (Example:0.02): " << endl;
 	cin >> stopLoss;
-	cout << "Please enter the initial cash invesment (Exmple:10000) " << endl;
+	cout << "Please enter the initial cash invesment (Example:895.3) " << endl;
 	cin >> intialCash;
 	robot.loadData("SPX500_USD_H4.CSV");
 
