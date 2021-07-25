@@ -1,11 +1,13 @@
 /****************************************************************************************
 * Project		:	AlgoTrading Jorge, David, Camilo, Shanka
-* File			:	main.cpp
+* File			:	RobotMenu.cpp
 * Lenguaje		:	C++
 * License		:	Apache License Ver 2.0, www.apache.org/licenses/LICENSE-2.0
 * Description	:	main CPP file for the program, entry point.
 *
-* References	:	- M.Capinski and T.Zastawniak, Numerical Methods in Finance with C++,
+* References	:	- B. Stroustrup: The C++ Programming Language (Fourth Edition).
+*					  Addison Wesley. Reading Mass. USA. May 2013. ISBN 0-321-56384-0.
+*					- M.Capinski and T.Zastawniak, Numerical Methods in Finance with C++,
 *					  Cambridge, 2012, code: http://www.cambridge.org/9780521177160
 * Other files	:
 * Git Control	:	https://github.com/camiloblanco/WhiteRobotC
@@ -29,12 +31,9 @@ RobotMenu::RobotMenu() {
 
 // Clear the whole console
 void RobotMenu::clearConsole() {
-<<<<<<< HEAD
-	system("cls");
-=======
 	//cout << "\x1B[2J\x1B[H"; //Linux
 	system("CLS"); //Windows
->>>>>>> 1c837650a4632ddc140dad6ddbe9224df7aa1dce
+
 }
 
 // Pause execution waiting for a key
@@ -51,23 +50,22 @@ void RobotMenu::readLine(string& description) {
 }
 
 
-//
+// Test if the data file is correct and display content
 void RobotMenu::testData() {
 	WhiteRobot robot;
 	robot.loadData("index_data.csv");
-	robot.displayData();
+	robot.printPrices();
 	menuPause();
 }
 
-//
+// Execute one instance of the White Robot
 void RobotMenu::executeWhite () {
 	WhiteRobot robot;
 	int maPointsS, maPointsM, maPointsL, slopePoints;
 	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
-	cout << "		White Robot C++ an algorimic trading simulation program " << endl ;
-	cout << "				Version 1.1.0: simulations.csv generator		" << endl << endl;
+	cout << "			2. Single White Robot simulation " << endl << endl ;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
 	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
 	cin >> slopePoints;
@@ -93,7 +91,7 @@ void RobotMenu::executeWhite () {
 	menuPause();
 }
 
-//Main menu for accesing the finlib
+//Main menu for accesing White Robot program 
 void RobotMenu::mainMenu() {
 
 	int option = 9;
@@ -101,10 +99,11 @@ void RobotMenu::mainMenu() {
 	while (option != 0) {
 		clearConsole();
 		cout << "****************************************************************************" << endl;
-		cout << "		White Robot C++ an algorimic trading program " << endl << endl;
+		cout << "		White Robot C++ an algorimic trading backtesting program " << endl << endl;
+		cout << "				Version 1.1.0: simulations.csv generator		" << endl << endl;
 		cout << "Select an option by entering the given number:" << endl << endl;
-		cout << "1. Test the data load from the CSV File" << endl;
-		cout << "2. Execute the White robot strategy" << endl;
+		cout << "1. Test and print the data from the CSV File" << endl;
+		cout << "2. Execute the a single White Robot strategy" << endl;
 		cout << "0. To exit the program" << endl;
 		cout << "****************************************************************************" << endl;
 		cout << endl << "Please enter the option number:" << endl;

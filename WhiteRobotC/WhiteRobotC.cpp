@@ -30,6 +30,5 @@ int main()
 {
 	RobotMenu menu;
 	menu.mainMenu();
-
 	return 0;
 }

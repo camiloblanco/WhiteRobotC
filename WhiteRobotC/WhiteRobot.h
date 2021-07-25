@@ -1,4 +1,25 @@
-#pragma
+/****************************************************************************************
+* Project		:	AlgoTrading Jorge, David, Camilo, Shanka
+* File			:	WhiteRobot.h
+* Lenguaje		:	C++
+* License		:	Apache License Ver 2.0, www.apache.org/licenses/LICENSE-2.0
+* Description	:	main CPP file for the program, entry point.
+*
+* References	:	- B. Stroustrup: The C++ Programming Language (Fourth Edition).
+*					  Addison Wesley. Reading Mass. USA. May 2013. ISBN 0-321-56384-0.
+*					- M.Capinski and T.Zastawniak, Numerical Methods in Finance with C++,
+*					  Cambridge, 2012, code: http://www.cambridge.org/9780521177160
+* Other files	:
+* Git Control	:	https://github.com/camiloblanco/WhiteRobotC
+* Author - Year	:	Sahenjit Paul - Camilo Blanco Vargas - Year: 2021
+* Mail - Web	:	shanks.p.95@gmail.com -:mail@camiloblanco.com
+****************************************************************************************/
+
+/****************************************************************************************
+*							#GUARDS #INCLUDES AND #CONSTANTS							*
+****************************************************************************************/
+
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
@@ -14,18 +35,27 @@
 #include <chrono>
 #include <ctime>
 
-
 using namespace std;
+
+/****************************************************************************************
+*									CLASS DECLARATION									*
+****************************************************************************************/
 
 class WhiteRobot
 {
 
 public:
+
+	//constructors
 	WhiteRobot();
 
+	//Getters and setters
 	vector<double> getPrices();
+	void printPrices();
+	string getTimeStr();
 
-	void displayData();
+	//public member functions	
+	
 
 	vector<string>  tokenize(string& str, char delim);
 
@@ -44,12 +74,12 @@ public:
 
 	int whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment);
 	
-	double marketAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
+	double orderAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
 
 	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash);
 
 
-	string getTimeStr();
+	
 
 	void printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss);
 	
@@ -57,7 +87,12 @@ public:
 
 	void saveSimulationData(string fileName);
 
+
+	~WhiteRobot();
+
 private:
+
+	//private variable members
 	vector<string> m_dates;
 	vector<double> m_prices;
 	vector<double> m_volume;
@@ -69,14 +104,11 @@ private:
 
 	int m_point;
 	int m_state;
+
 	vector<int> m_order_signal;
 
 	vector<double> m_portfolio_value;
 	vector<int> m_stop_loss;
-
-	~WhiteRobot();
-
-
 
 };
 

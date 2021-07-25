@@ -1,13 +1,59 @@
+/****************************************************************************************
+* Project		:	AlgoTrading Jorge, David, Camilo, Shanka
+* File			:	WhiteRobot.cpp
+* Lenguaje		:	C++
+* License		:	Apache License Ver 2.0, www.apache.org/licenses/LICENSE-2.0
+* Description	:	main CPP file for the program, entry point.
+*
+* References	:	- B. Stroustrup: The C++ Programming Language (Fourth Edition).
+*					  Addison Wesley. Reading Mass. USA. May 2013. ISBN 0-321-56384-0.
+*					- M.Capinski and T.Zastawniak, Numerical Methods in Finance with C++,
+*					  Cambridge, 2012, code: http://www.cambridge.org/9780521177160
+* Other files	:
+* Git Control	:	https://github.com/camiloblanco/WhiteRobotC
+* Author - Year	:	Sahenjit Paul - Camilo Blanco Vargas - Year: 2021
+* Mail - Web	:	shanks.p.95@gmail.com -:mail@camiloblanco.com
+****************************************************************************************/
+
+/****************************************************************************************
+*								#INCLUDES AND #CONSTANTS								*
+****************************************************************************************/
+
 #include "WhiteRobot.h"
 
+/****************************************************************************************
+*									MEMBER FUNCTIONS									*
+****************************************************************************************/
 
-
+//constructor
 WhiteRobot::WhiteRobot()
 {
 	m_point = 0;
 	m_state = 1;
 }
 
+//Getters and setters
+
+vector<double> WhiteRobot::getPrices() {
+	return this->m_prices;
+}
+
+void WhiteRobot::printPrices() {
+	cout << "Printing Data" << endl;
+	for (auto& element : m_prices) {
+		cout << element << endl;
+	}
+}
+
+string WhiteRobot::getTimeStr() {
+	std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+
+	std::string s(30, '\0');
+	std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+	return s;
+}
+
+//Tokenize a string into a vector of strings by a given character
 vector<string> WhiteRobot::tokenize(string& str, char delim) {
 	size_t start;
 	size_t end = 0;
@@ -23,7 +69,7 @@ vector<string> WhiteRobot::tokenize(string& str, char delim) {
 }
 
 
-
+// Load the index data from CSV file
 void WhiteRobot::loadData(string fileName) {
 
 	string line;
@@ -55,17 +101,7 @@ void WhiteRobot::loadData(string fileName) {
 	}
 }
 
-vector<double> WhiteRobot::getPrices() {
-	return this->m_prices;
-}
-
-void WhiteRobot::displayData() {
-	cout << "Printing Data" << endl;
-	for (auto& element : m_prices) {
-		cout << element << endl;
-	}
-}
-
+// Simple moving average function
 double WhiteRobot::movingAverage(vector<double> prices, int windowSize) {
 	vector<double> window;
 	window = vector < double > (prices.end() - windowSize, prices.end());
@@ -77,6 +113,7 @@ double WhiteRobot::movingAverage(vector<double> prices, int windowSize) {
 	return average;
 }
 
+// Moving slope function
 double WhiteRobot::movingSlope(const vector<double> prices, int windowSize) {
 	//from https://stackoverflow.com/questions/18939869/how-to-get-the-slope-of-a-linear-regression-line-using-c
 	
@@ -95,7 +132,7 @@ double WhiteRobot::movingSlope(const vector<double> prices, int windowSize) {
 	return slope;
 }
 
-
+// Signal generator function
 vector<double> WhiteRobot::generateSignals(vector<double> prices, int maPointsS, int maPointsM, int maPointsL, int slopePoints) {
 	vector<double> signals;
 	double maS, maM, maL, slope;
@@ -110,6 +147,7 @@ vector<double> WhiteRobot::generateSignals(vector<double> prices, int maPointsS,
 	return signals;
 }
 
+// Generates the order signal from the state of the State Machine
 int WhiteRobot::stateAnalyser() {
 	if (m_state == 3 || m_state == 4) {
 		//Long position
@@ -126,6 +164,7 @@ int WhiteRobot::stateAnalyser() {
 	
 }
 
+// Analyses if the stop loss condition has been reached
 bool WhiteRobot::checkStopLoss(double stopLoss, double last_trade_investment) {
 
 	double curren_trade_profit = (m_portfolio_value[m_point-1] - last_trade_investment) / last_trade_investment;
@@ -141,11 +180,12 @@ bool WhiteRobot::checkStopLoss(double stopLoss, double last_trade_investment) {
 		
 }
 
+// State machine containing the brain (logic) of the robot
 int WhiteRobot::whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment) {
 
 	if (checkStopLoss(stopLoss, last_trade_investment)) {
 		// Slop loss limit reached in the previous point
-		m_state =1;
+		m_state = 1;
 	}
 	else if (m_state == 1) {
 		if (m_slope[m_point] > slopeMin) {
@@ -200,16 +240,17 @@ int WhiteRobot::whiteStateMachine(double slopeMin, double stopLoss, double last_
 			m_state = 1;
 		}
 	}
+	// Return the order signal according to the state
 	return stateAnalyser();
 }
 
 
-
-double  WhiteRobot::marketAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units) {
+// Analyses the current and previous order signal to determine the current portfolio value
+double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units) {
 	
 	double portfolio_value;
 	
-	//detect trade signals and execute
+	// Evaluate order signals and update invesment position variables
 	if (m_order_signal[m_point] == 1 && m_order_signal[m_point - 1] == 0) {
 		//Start Long trade
 		last_trade_investment = current_cash;
@@ -234,7 +275,6 @@ double  WhiteRobot::marketAnalyser(double& current_cash, double& last_trade_inve
 	}
 
 	//Anlayse the porfolio value
-	
 	if (m_order_signal[m_point] == 1) {
 		portfolio_value = current_cash + cfd_units * m_prices[m_point];
 	}
@@ -245,10 +285,12 @@ double  WhiteRobot::marketAnalyser(double& current_cash, double& last_trade_inve
 		portfolio_value = current_cash;
 	}
 
+	//Return the current porfolo value
 	return portfolio_value;
 }
 
 
+// White strategy backtest implementation
 void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash) {
 	cout << "Executing White strategy" << endl;
 
@@ -280,7 +322,7 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 			m_ma_large.push_back(signals[2]);
 			m_slope.push_back(signals[3]);
 			m_order_signal.push_back(whiteStateMachine(slopeMin,stopLoss, last_trade_investment));
-			m_portfolio_value.push_back(marketAnalyser(current_cash, last_trade_investment, cfd_units));
+			m_portfolio_value.push_back(orderAnalyser(current_cash, last_trade_investment, cfd_units));
 			++m_point;
 		}
 	}
@@ -294,15 +336,7 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 	}	
 }
 
-
-string WhiteRobot::getTimeStr() {
-		std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-
-		std::string s(30, '\0');
-		std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
-		return s;
-}
-
+// Print backtest simulation results on the console
 void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
 
 	cout << endl << "****************************************************************************" << endl;
@@ -330,6 +364,7 @@ void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int s
 	cout << endl << "****************************************************************************" << endl;
 }
 
+// Add backtest simulation results on CSV file
 void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
 
 	ofstream file_out;
@@ -361,7 +396,7 @@ void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, i
 
 }
 
-
+// Genereate a new backtest simulation CSV data file
 void WhiteRobot::saveSimulationData(string fileName) {
 
 	// Create an output filestream object
@@ -380,6 +415,7 @@ void WhiteRobot::saveSimulationData(string fileName) {
 	cout << endl << "Simulation data saved into: "<< fileName << endl;
 }
 
+//destructor
 WhiteRobot::~WhiteRobot()
 {
 }

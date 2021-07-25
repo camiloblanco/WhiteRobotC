@@ -1,9 +1,10 @@
 /****************************************************************************************
 * Project		:	AlgoTrading Jorge, David, Camilo, Shanka
+* File			:	RobotMenu.h
 * Lenguaje		:	C++
 * License		:	Apache License Ver 2.0, www.apache.org/licenses/LICENSE-2.0
-* Description	:	Header file for the RobotMenu Class
-*					Menus and sub-menus for using the Robot
+* Description	:	main CPP file for the program, entry point.
+*
 * References	:	- B. Stroustrup: The C++ Programming Language (Fourth Edition).
 *					  Addison Wesley. Reading Mass. USA. May 2013. ISBN 0-321-56384-0.
 *					- M.Capinski and T.Zastawniak, Numerical Methods in Finance with C++,
@@ -19,12 +20,14 @@
 *							#GUARDS #INCLUDES AND #CONSTANTS							*
 ****************************************************************************************/
 #pragma once
-using namespace std;
+
 #include<iostream>
 #include<string>
 #include<stdlib.h>
-
 #include "WhiteRobot.h"
+
+using namespace std;
+
 /****************************************************************************************
 *									CLASS DECLARATION									*
 ****************************************************************************************/
