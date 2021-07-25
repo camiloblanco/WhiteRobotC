@@ -1,5 +1,1 @@
- portfolio_return,simulation_date,intial_date,final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return,long_trades,good_long_trades,long_trades_profit,short_trades,good_short_trades,short_trades_profit, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_dn
-447.58%,25/07/2021 18:45,29/09/2003 09:00,04/07/2021 21:00,1000,4348.4,334.84%,1000,5475.78,447.58%,16,12,4475.78,0,0,0,5,30,35,31,0.0191561,0.117649,6,0
-360.62%,25/07/2021 17:59,29/09/2003 09:00,04/07/2021 21:00,1000,4348.4,334.84%,1000,4606.17,360.62%,25,4,3614.21,19,4,-8.03489,11,11,17,82,0.0042861,0.00307963,5,4
-352.96%,25/07/2021 17:59,29/09/2003 09:00,04/07/2021 21:00,1000,4348.4,334.84%,1000,4529.62,352.96%,11,1,3529.62,0,0,0,7,7,5,129,0.00481196,0.0134185,5,1
-286.59%,25/07/2021 18:46,29/09/2003 09:00,04/07/2021 21:00,1000,4348.4,334.84%,1000,3865.85,286.59%,355,203,3030.97,42,18,-165.122,15,14,22,2428,0.0110383,0.0570866,5,1
+simulation_date,intial_date,final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return,long_trades,good_long_trades,long_trades_profit,short_trades,good_short_trades,short_trades_profit, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_dn

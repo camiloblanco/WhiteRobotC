@@ -52,14 +52,16 @@ public:
 
 	WhiteRobot(int maPointsS,	int maPointsM, int maPointsL, int slopePoints, double slopeMin,	double stopLoss, int modeUp, int modeDown);
 
+
 	//Getters and setters
+
 	void setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown);
 	vector<double> getPrices();
 	void printPrices();
 	string getTimeStr();
 
+
 	//public member functions	
-	
 
 	vector<string>  tokenize(string& str, char delim);
 
@@ -83,7 +85,6 @@ public:
 	void whiteStrategy(double intialCash);
 
 
-	
 
 	void printResults();
 	
@@ -106,7 +107,6 @@ private:
 	double m_stopLoss;
 	int m_modeUp;
 	int m_modeDown;
-
 
 	vector<string> m_dates;
 	vector<double> m_prices;

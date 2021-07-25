@@ -25,7 +25,8 @@
 *									MEMBER FUNCTIONS									*
 ****************************************************************************************/
 
-//constructor
+//constructors
+
 WhiteRobot::WhiteRobot()
 {
 	m_maPointsS=1;
@@ -123,6 +124,8 @@ string WhiteRobot::getTimeStr() {
 	std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
 	return s;
 }
+
+//public member functions
 
 //Tokenize a string into a vector of strings by a given character
 vector<string> WhiteRobot::tokenize(string& str, char delim) {
@@ -441,7 +444,7 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 	double last_trade_investment = 1;
 	double cfd_units = 0;
 
-	if (m_slopePoints > 0 && m_maPointsL > 0 && m_maPointsM > 0 &&  m_maPointsS > 0) {
+	if (m_slopePoints > 1 && m_maPointsL > 1 && m_maPointsM > 1 &&  m_maPointsS > 1) {
 
 		// Loop over the first part of the dataset
 		for (auto it = m_prices.begin(); it != m_prices.begin() + m_slopePoints; ++it) {
@@ -485,6 +488,27 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 		cout << " Window MA Large: " << m_maPointsL << endl;
 		cout << " Window Slope: " << m_slopePoints << endl;
 		cout << " Strategy imposible to execute" << endl;
+
+		// Fill everythong with 0 to avoid memory acces errors
+		for (auto it = m_prices.begin(); it != m_prices.end(); ++it) {
+			m_ma_small.push_back(0.0);
+			m_ma_medium.push_back(0.0);
+			m_ma_large.push_back(0.0);
+			m_slope.push_back(0.0);
+
+			m_state_signal.push_back(0);
+			m_order_signal.push_back(0);
+
+			m_current_cash.push_back(intialCash);
+			m_cfd_units.push_back(0.0);
+			m_last_trade_investment.push_back(0.0);
+			m_portfolio_value.push_back(intialCash);
+			m_trade_profit.push_back(0.0);
+
+			m_stop_loss.push_back(0);
+
+			++m_point;
+		}
 	}	
 }
 
