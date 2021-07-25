@@ -105,6 +105,9 @@ private:
 	int m_point;
 	int m_state;
 
+	int m_long_trades;
+	int m_short_trades;
+
 	vector<int> m_order_signal;
 
 	vector<double> m_portfolio_value;
