@@ -229,16 +229,22 @@ int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 				//S>M small cycle
 				m_state = 4;
 			}
-
 		}
 		else if (m_slope[m_point] < -m_slopeMin) {
 			//negative trend
-			if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1])) {
-				//S<M
+			if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 2 || m_modeDown == 3)) {
+				//S<M big cycle
 				m_state = 5;
 			}
+			else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 4 || m_modeDown == 5)) {
+				//S<L
+				m_state = 6;
+			}
+			else if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeDown == 6 || m_modeDown == 7)) {
+				//S<M small cycle
+				m_state = 7;
+			}
 		}
-
 	}
 	else if (m_state == 2) {
 		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 2)) {
@@ -261,7 +267,7 @@ int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 		}
 	}
 	else if (m_state == 4) {
-		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 3 || m_modeUp == 5 || m_modeUp == 6 || m_modeUp == 7)) {
+		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 3 || m_modeUp == 5 || m_modeUp == 6 )) {
 			//S<L
 			m_state = 1;
 		}
@@ -269,23 +275,34 @@ int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 			//S<M 
 			m_state = 1;
 		}
-
 	}
 	else if (m_state == 5) {
-		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1])) {
-			//S<L
+		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 2)) {
+			//S<L big cycle
 			m_state = 6;
 		}
-	}
-	else if (m_state == 6) {
-		if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1])) {
-			//S>M
+		else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 3)) {
+			//S<L medium cycle
 			m_state = 7;
 		}
 	}
+	else if (m_state == 6) {
+		if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 5)) {
+			//S>M
+			m_state = 7;
+		}
+		else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeDown == 2 || m_modeDown == 4)) {
+			//S>L 
+			m_state = 1;
+		}
+	}
 	else if (m_state == 7) {
-		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1])) {
+		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 3 || m_modeDown == 5 || m_modeDown == 6)) {
 			//S>L
+			m_state = 1;
+		}
+		else if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeDown == 7)) {
+			//S>M 
 			m_state = 1;
 		}
 	}

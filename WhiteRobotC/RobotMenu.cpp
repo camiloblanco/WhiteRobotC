@@ -113,7 +113,7 @@ void RobotMenu::mainMenu() {
 		clearConsole();
 		cout << "****************************************************************************" << endl;
 		cout << "	White Robot C++ an algorimic trading backtesting program " << endl << endl;
-		cout << "		Version 1.1: simulations.csv generator		" << endl << endl;
+		cout << "		Version 1.5: Flexible brain		" << endl << endl;
 		cout << "Select an option by entering the given number:" << endl << endl;
 		cout << "1. Test and print the data from the CSV File" << endl;
 		cout << "2. Execute the a single White Robot strategy" << endl;
