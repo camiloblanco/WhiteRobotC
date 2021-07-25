@@ -28,10 +28,35 @@
 //constructor
 WhiteRobot::WhiteRobot()
 {
+	m_maPointsS=1;
+	m_maPointsM=2;
+	m_maPointsL=3;
+	m_slopePoints=5;
+	m_slopeMin=0.1;
+	m_stopLoss=0.1;
+	m_modeUp=1;
+	m_modeDown=1; 
+	
 	m_point = 0;
 	m_state = 1;
 	m_long_trades=0;
 	m_short_trades=0;
+}
+
+WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown) {
+	m_maPointsS = maPointsS;
+	m_maPointsM = maPointsM;
+	m_maPointsL = maPointsL;
+	m_slopePoints = slopePoints;
+	m_slopeMin = slopeMin;
+	m_stopLoss = stopLoss;
+	m_modeUp = modeUp;
+	m_modeDown = modeDown;
+
+	m_point = 0;
+	m_state = 1;
+	m_long_trades = 0;
+	m_short_trades = 0;
 }
 
 //Getters and setters
@@ -295,17 +320,17 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 
 
 // White strategy backtest implementation
-void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash) {
+void WhiteRobot::whiteStrategy( double intialCash) {
 	cout << "Executing White strategy" << endl;
 
 	double current_cash = intialCash;
 	double last_trade_investment = 1;
 	double cfd_units = 0;
 
-	if (slopePoints > maPointsL && maPointsL > maPointsM && maPointsM > maPointsS) {
+	if (m_slopePoints > m_maPointsL && m_maPointsL > m_maPointsM && m_maPointsM > m_maPointsS) {
 
 		// Loop over the first part of the dataset
-		for (auto it = m_prices.begin(); it != m_prices.begin() + slopePoints; ++it) {
+		for (auto it = m_prices.begin(); it != m_prices.begin() + m_slopePoints; ++it) {
 			m_ma_small.push_back(0.0);
 			m_ma_medium.push_back(0.0);
 			m_ma_large.push_back(0.0);
@@ -317,31 +342,31 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 		}
 
 		// Loop over the tradable part of the dataset
-		for (auto it = m_prices.begin() + slopePoints; it != m_prices.end(); ++it) {
+		for (auto it = m_prices.begin() + m_slopePoints; it != m_prices.end(); ++it) {
 			vector<double> window;
-			window = vector < double >(it - slopePoints+1, it+1);
-			vector<double> signals = generateSignals(window, maPointsS, maPointsM, maPointsL, slopePoints);
+			window = vector < double >(it - m_slopePoints+1, it+1);
+			vector<double> signals = generateSignals(window, m_maPointsS, m_maPointsM, m_maPointsL, m_slopePoints);
 			m_ma_small.push_back(signals[0]);
 			m_ma_medium.push_back(signals[1]);
 			m_ma_large.push_back(signals[2]);
 			m_slope.push_back(signals[3]);
-			m_order_signal.push_back(whiteStateMachine(slopeMin,stopLoss, last_trade_investment));
+			m_order_signal.push_back(whiteStateMachine(m_slopeMin, m_stopLoss, last_trade_investment));
 			m_portfolio_value.push_back(orderAnalyser(current_cash, last_trade_investment, cfd_units));
 			++m_point;
 		}
 	}
 	else
 	{
-		cout << " Window MA Small: " << maPointsS << endl;
-		cout << " Window MA Medium: " << maPointsM << endl;
-		cout << " Window MA Large: " << maPointsL << endl;
-		cout << " Window Slope: " << slopePoints << endl;
+		cout << " Window MA Small: " << m_maPointsS << endl;
+		cout << " Window MA Medium: " << m_maPointsM << endl;
+		cout << " Window MA Large: " << m_maPointsL << endl;
+		cout << " Window Slope: " << m_slopePoints << endl;
 		cout << " Strategy imposible to execute" << endl;
 	}	
 }
 
 // Print backtest simulation results on the console
-void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
+void WhiteRobot::printResults() {
 
 	cout << endl << "****************************************************************************" << endl;
 	cout << endl << "Simulation Results:" << endl<<endl;
@@ -365,21 +390,21 @@ void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int s
 	cout << endl << "****************************************************************************" << endl;
 	cout << endl << "Simulation Parameters:" << endl << endl;
 
-	cout << "Small moving average points: " << maPointsS << endl;
-	cout << "Medium moving average point: " << maPointsM << endl;
-	cout << "Large moving average point: " << maPointsL << endl;
-	cout << "Slope points: " << slopePoints << endl;
-	cout << "Min slope: " << slopeMin << endl;
-	cout << "Stop loss: " << stopLoss << endl;
-	cout << "State machine mode Up: " << "1" << endl;
-	cout << "State machine mode Down: " << "1" << endl;
+	cout << "Small moving average points: " << m_maPointsS << endl;
+	cout << "Medium moving average point: " << m_maPointsM << endl;
+	cout << "Large moving average point: " << m_maPointsL << endl;
+	cout << "Slope points: " << m_slopePoints << endl;
+	cout << "Min slope: " << m_slopeMin << endl;
+	cout << "Stop loss: " << m_stopLoss << endl;
+	cout << "State machine mode Up: " << m_modeUp << endl;
+	cout << "State machine mode Down: " << m_modeDown << endl;
 
 	cout << endl << "End of simulation Results." << endl << endl;
 	cout << endl << "****************************************************************************" << endl;
 }
 
 // Add backtest simulation results on CSV file
-void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
+void WhiteRobot::saveSimulation(string fileName) {
 
 	ofstream file_out;
 
@@ -402,14 +427,14 @@ void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, i
 	file_out << m_long_trades << ",";
 	file_out << m_short_trades << ",";
 
-	file_out << maPointsS << ",";
-	file_out << maPointsM << ",";
-	file_out << maPointsL << ",";
-	file_out << slopePoints << ",";
-	file_out << slopeMin << ",";
-	file_out << stopLoss << ",";
-	file_out << "1" << ",";
-	file_out << "1" << endl;	
+	file_out << m_maPointsS << ",";
+	file_out << m_maPointsM << ",";
+	file_out << m_maPointsL << ",";
+	file_out << m_slopePoints << ",";
+	file_out << m_slopeMin << ",";
+	file_out << m_stopLoss << ",";
+	file_out << m_modeUp << ",";
+	file_out << m_modeDown << endl;
 
 	cout << endl << "Simulation results added to: "<< fileName << endl;
 

@@ -64,33 +64,41 @@ void RobotMenu::testData() {
 
 // Execute one instance of the White Robot
 void RobotMenu::executeWhite () {
-	WhiteRobot robot;
-	int maPointsS, maPointsM, maPointsL, slopePoints;
+	
+	int maPointsS, maPointsM, maPointsL, slopePoints, modeUp, modeDown;
 	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
 	cout << "			2. Single White Robot simulation " << endl;
 	cout << "****************************************************************************" << endl << endl;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
-	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
-	cin >> slopePoints;
+	
 	cout << "Please enter the small window points size (Example:14): " << endl;
 	cin >> maPointsS;
 	cout << "Please enter the medium window points size (Example:21): " << endl;
 	cin >> maPointsM;
 	cout << "Please enter the large window points size (Example:40): " << endl;
 	cin >> maPointsL;
+	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
+	cin >> slopePoints;
 	cout << "Please enter the minimun slope to establish a trend (Example:0.001): " << endl;
 	cin >> slopeMin;
 	cout << "Please enter the Stop-loss parameter (Example:0.02): " << endl;
 	cin >> stopLoss;
+	cout << "Please enter the logic Mode for Long Trades [1-7]: " << endl;
+	cin >> modeUp;
+	cout << "Please enter the logic Mode for Short Trades [1-7]: " << endl;
+	cin >> modeDown;
+
 	cout << "Please enter the initial cash invesment (Example:1000) " << endl;
 	cin >> intialCash;
-	robot.loadData("index_data.csv");
+	
 
-	robot.whiteStrategy(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, intialCash);
-	robot.printResults(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss);
-	robot.saveSimulation("simulations.csv", maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss);
+	WhiteRobot robot(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, modeUp, modeDown);
+	robot.loadData("index_data.csv");
+	robot.whiteStrategy(intialCash);
+	robot.printResults();
+	robot.saveSimulation("simulations.csv");
 	robot.saveSimulationData("portfolio_simulation.csv");
 
 	menuPause();
