@@ -1,2 +1,1 @@
 simulation_date,intial_date,final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return,long_trades,good_long_trades,long_trades_profit,short_trades,good_short_trades,short_trades_profit, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_dn
-25/07/2021 16:14,29/09/2003 09:00,04/07/2021 21:00,1000,4348.4,334.84%,1000,3437.34,243.73%,321,191,2504.39,41,15,-67.0462,14,21,22,3000,0.03,0.03,5,2

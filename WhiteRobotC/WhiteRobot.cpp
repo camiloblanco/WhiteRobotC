@@ -25,7 +25,8 @@
 *									MEMBER FUNCTIONS									*
 ****************************************************************************************/
 
-//constructor
+//constructors
+
 WhiteRobot::WhiteRobot()
 {
 	m_maPointsS=1;
@@ -67,7 +68,43 @@ WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoi
 	m_short_trades_profit = 0;
 }
 
+
 //Getters and setters
+
+void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown) {
+	m_maPointsS = maPointsS;
+	m_maPointsM = maPointsM;
+	m_maPointsL = maPointsL;
+	m_slopePoints = slopePoints;
+	m_slopeMin = slopeMin;
+	m_stopLoss = stopLoss;
+	m_modeUp = modeUp;
+	m_modeDown = modeDown;
+
+	m_point = 0;
+	m_state = 1;
+
+	m_long_trades = 0;
+	m_short_trades = 0;
+	m_good_long_trades = 0;
+	m_good_short_trades = 0;
+	m_long_trades_profit = 0;
+	m_short_trades_profit = 0;
+
+	m_ma_small.clear();
+	m_ma_medium.clear();
+	m_ma_large.clear();
+	m_slope.clear();
+	m_state_signal.clear();
+	m_order_signal.clear();
+
+	m_current_cash.clear();
+	m_cfd_units.clear();
+	m_last_trade_investment.clear();
+	m_portfolio_value.clear();
+	m_trade_profit.clear();
+	m_stop_loss.clear();
+}
 
 vector<double> WhiteRobot::getPrices() {
 	return this->m_prices;
@@ -87,6 +124,8 @@ string WhiteRobot::getTimeStr() {
 	std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
 	return s;
 }
+
+//public member functions
 
 //Tokenize a string into a vector of strings by a given character
 vector<string> WhiteRobot::tokenize(string& str, char delim) {
@@ -110,9 +149,8 @@ void WhiteRobot::loadData(string fileName) {
 	string line;
 	ifstream myStream(fileName);
 	if (myStream.is_open()) {
-
+		cout << endl <<" " << fileName << " successfully opened." << line << endl;
 		getline(myStream, line);
-
 		cout << "The first line is: " << line << endl;
 
 
@@ -400,13 +438,13 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 
 // White strategy backtest implementation
 void WhiteRobot::whiteStrategy( double intialCash) {
-	cout << "Executing White strategy" << endl;
+	//cout << "Executing White strategy" << endl;
 
 	double current_cash = intialCash;
 	double last_trade_investment = 1;
 	double cfd_units = 0;
 
-	if (m_slopePoints > m_maPointsL && m_maPointsL > m_maPointsM && m_maPointsM > m_maPointsS) {
+	if (m_slopePoints > 1 && m_maPointsL > 1 && m_maPointsM > 1 &&  m_maPointsS > 1) {
 
 		// Loop over the first part of the dataset
 		for (auto it = m_prices.begin(); it != m_prices.begin() + m_slopePoints; ++it) {
@@ -450,6 +488,27 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 		cout << " Window MA Large: " << m_maPointsL << endl;
 		cout << " Window Slope: " << m_slopePoints << endl;
 		cout << " Strategy imposible to execute" << endl;
+
+		// Fill everythong with 0 to avoid memory acces errors
+		for (auto it = m_prices.begin(); it != m_prices.end(); ++it) {
+			m_ma_small.push_back(0.0);
+			m_ma_medium.push_back(0.0);
+			m_ma_large.push_back(0.0);
+			m_slope.push_back(0.0);
+
+			m_state_signal.push_back(0);
+			m_order_signal.push_back(0);
+
+			m_current_cash.push_back(intialCash);
+			m_cfd_units.push_back(0.0);
+			m_last_trade_investment.push_back(0.0);
+			m_portfolio_value.push_back(intialCash);
+			m_trade_profit.push_back(0.0);
+
+			m_stop_loss.push_back(0);
+
+			++m_point;
+		}
 	}	
 }
 
@@ -532,7 +591,7 @@ void WhiteRobot::saveSimulation(string fileName) {
 	file_out << m_modeUp << ",";
 	file_out << m_modeDown << endl;
 
-	cout << endl << "Simulation results added to: "<< fileName << endl;
+	//cout << endl << "Simulation results added to: "<< fileName << endl;
 
 }
 
