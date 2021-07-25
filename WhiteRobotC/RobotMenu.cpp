@@ -29,7 +29,8 @@ RobotMenu::RobotMenu() {
 
 // Clear the whole console
 void RobotMenu::clearConsole() {
-	cout << "\x1B[2J\x1B[H";
+	//cout << "\x1B[2J\x1B[H"; //Linux
+	system("CLS"); //Windows
 }
 
 // Pause execution waiting for a key
