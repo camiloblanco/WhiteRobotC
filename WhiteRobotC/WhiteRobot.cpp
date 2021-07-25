@@ -318,6 +318,7 @@ int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 			m_state = 1;
 		}
 	}
+	m_state_signal.push_back(m_state);
 	// Return the order signal according to the state
 	return stateAnalyser();
 }
@@ -414,6 +415,7 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 			m_ma_large.push_back(0.0);
 			m_slope.push_back(0.0);
 
+			m_state_signal.push_back(0);
 			m_order_signal.push_back(0);
 				
 			m_current_cash.push_back(intialCash);
@@ -541,12 +543,12 @@ void WhiteRobot::saveSimulationData(string fileName) {
 	ofstream outFile(fileName);
 
 	// write the file headers
-	outFile << "date" << "," << "price" << "," << "ma_small" << "," << "ma_medium" << "," << "ma_large" << "," << "ma_slope" << "," << "order_signal" << "," << "current_cash" << "," << "cfd_units" << "," << "portfolio_value" << "," << "last_trade_investment" << "," << "m_trade_profit" << " ," << "stop_loss" << endl;
+	outFile << "date" << "," << "price" << "," << "ma_small" << "," << "ma_medium" << "," << "ma_large" << "," << "ma_slope" << ","<<"state_signal"<<"," << "order_signal" << "," << "current_cash" << "," << "cfd_units" << "," << "portfolio_value" << "," << "last_trade_investment" << "," << "m_trade_profit" << " ," << "stop_loss" << endl;
 
 
 	// write data to the file
 	for (int i = 0; i != m_prices.size(); i++) {
-		outFile << m_dates[i] << "," << m_prices[i] << "," << m_ma_small[i] << "," << m_ma_medium[i] << "," << m_ma_large[i] << "," << m_slope[i] << "," << m_order_signal[i] << ","<< m_current_cash[i] << "," << m_cfd_units[i] << "," << m_portfolio_value[i] << "," << m_last_trade_investment [i] << "," << m_trade_profit[i] << "," << m_stop_loss[i] <<endl;
+		outFile << m_dates[i] << "," << m_prices[i] << "," << m_ma_small[i] << "," << m_ma_medium[i] << "," << m_ma_large[i] << "," << m_slope[i] << "," << m_state_signal[i] <<","<< m_order_signal[i] << ","<< m_current_cash[i] << "," << m_cfd_units[i] << "," << m_portfolio_value[i] << "," << m_last_trade_investment [i] << "," << m_trade_profit[i] << "," << m_stop_loss[i] <<endl;
 	}
 	// close the output file
 	outFile.close();

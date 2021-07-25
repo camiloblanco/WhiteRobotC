@@ -124,6 +124,7 @@ private:
 	double m_long_trades_profit;
 	double m_short_trades_profit;
 
+	vector<int> m_state_signal;
 	vector<int> m_order_signal;
 
 	vector<double> m_current_cash;
