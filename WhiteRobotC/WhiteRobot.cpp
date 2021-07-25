@@ -82,12 +82,27 @@ void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int 
 
 	m_point = 0;
 	m_state = 1;
+
 	m_long_trades = 0;
 	m_short_trades = 0;
 	m_good_long_trades = 0;
 	m_good_short_trades = 0;
 	m_long_trades_profit = 0;
 	m_short_trades_profit = 0;
+
+	m_ma_small.clear();
+	m_ma_medium.clear();
+	m_ma_large.clear();
+	m_slope.clear();
+	m_state_signal.clear();
+	m_order_signal.clear();
+
+	m_current_cash.clear();
+	m_cfd_units.clear();
+	m_last_trade_investment.clear();
+	m_portfolio_value.clear();
+	m_trade_profit.clear();
+	m_stop_loss.clear();
 }
 
 vector<double> WhiteRobot::getPrices() {
@@ -552,7 +567,7 @@ void WhiteRobot::saveSimulation(string fileName) {
 	file_out << m_modeUp << ",";
 	file_out << m_modeDown << endl;
 
-	cout << endl << "Simulation results added to: "<< fileName << endl;
+	//cout << endl << "Simulation results added to: "<< fileName << endl;
 
 }
 

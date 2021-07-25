@@ -24,6 +24,7 @@
 #include<iostream>
 #include<string>
 #include<stdlib.h>
+#include <random>
 #include "WhiteRobot.h"
 
 using namespace std;
@@ -46,6 +47,8 @@ public:
 	void testData();
 	void executeWhite();
 	void radomWhite();
+	void closedRadomWhite();
+	void FixedBrainRadomWhite();
 	void mainMenu();
 	
 };
