@@ -19,6 +19,7 @@ using namespace std;
 
 class WhiteRobot
 {
+
 public:
 	WhiteRobot();
 
@@ -56,8 +57,6 @@ public:
 
 	void saveSimulationData(string fileName);
 
-	~WhiteRobot();
-
 private:
 	vector<string> m_dates;
 	vector<double> m_prices;
@@ -74,6 +73,9 @@ private:
 
 	vector<double> m_portfolio_value;
 	vector<int> m_stop_loss;
+
+	~WhiteRobot();
+
 
 
 };

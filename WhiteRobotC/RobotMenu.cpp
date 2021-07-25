@@ -29,7 +29,12 @@ RobotMenu::RobotMenu() {
 
 // Clear the whole console
 void RobotMenu::clearConsole() {
+<<<<<<< HEAD
 	system("cls");
+=======
+	//cout << "\x1B[2J\x1B[H"; //Linux
+	system("CLS"); //Windows
+>>>>>>> 1c837650a4632ddc140dad6ddbe9224df7aa1dce
 }
 
 // Pause execution waiting for a key
