@@ -192,11 +192,11 @@ int WhiteRobot::stateAnalyser() {
 }
 
 // Analyses if the stop loss condition has been reached
-bool WhiteRobot::checkStopLoss(double stopLoss, double last_trade_investment) {
+bool WhiteRobot::checkStopLoss(double last_trade_investment) {
 
 	double curren_trade_profit = (m_portfolio_value[m_point-1] - last_trade_investment) / last_trade_investment;
 
-	if ( (m_state == 3 || m_state == 4 || m_state == 6 || m_state == 7) &&  curren_trade_profit < - stopLoss) {
+	if ( (m_state == 3 || m_state == 4 || m_state == 6 || m_state == 7) &&  curren_trade_profit < - m_stopLoss) {
 		m_stop_loss.push_back(1);
 		return true;
 	}
@@ -208,62 +208,84 @@ bool WhiteRobot::checkStopLoss(double stopLoss, double last_trade_investment) {
 }
 
 // State machine containing the brain (logic) of the robot
-int WhiteRobot::whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment) {
+int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 
-	if (checkStopLoss(stopLoss, last_trade_investment)) {
+	if (checkStopLoss(last_trade_investment)) {
 		// Slop loss limit reached in the previous point
 		m_state = 1;
 	}
 	else if (m_state == 1) {
-		if (m_slope[m_point] > slopeMin) {
+		if (m_slope[m_point] > m_slopeMin) {
 			//positive trend
-			if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1])) {
-				//14>21
+			if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 2 || m_modeUp == 3)) {
+				//S>M  big cycle
 				m_state = 2;
 			}
+			else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 4 || m_modeUp == 5 )) {
+				//S>L
+				m_state = 3;
+			}
+			else if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeUp == 6 || m_modeUp == 7 )) {
+				//S>M small cycle
+				m_state = 4;
+			}
+
 		}
-		else if (m_slope[m_point] < -slopeMin) {
+		else if (m_slope[m_point] < -m_slopeMin) {
 			//negative trend
 			if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1])) {
-				//14<21
+				//S<M
 				m_state = 5;
 			}
 		}
 
 	}
 	else if (m_state == 2) {
-		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1])) {
-			//14>40
+		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 2)) {
+			//S>L big cycle
 			m_state = 3;
 		}
-	}
-	else if (m_state == 3) {
-		if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1])) {
-			//14<21
+		else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 3)) {
+			//S>L medium cycle
 			m_state = 4;
 		}
 	}
-	else if (m_state == 4) {
-		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1])) {
-			//14<40
+	else if (m_state == 3) {
+		if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 5)) {
+			//S<M 
+			m_state = 4;
+		}
+		else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 2 || m_modeUp == 4)) {
+			//S<L 
 			m_state = 1;
 		}
 	}
+	else if (m_state == 4) {
+		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 3 || m_modeUp == 5 || m_modeUp == 6 || m_modeUp == 7)) {
+			//S<L
+			m_state = 1;
+		}
+		if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeUp == 7)) {
+			//S<M 
+			m_state = 1;
+		}
+
+	}
 	else if (m_state == 5) {
 		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1])) {
-			//14<40
+			//S<L
 			m_state = 6;
 		}
 	}
 	else if (m_state == 6) {
 		if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1])) {
-			//14>21
+			//S>M
 			m_state = 7;
 		}
 	}
 	else if (m_state == 7) {
 		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1])) {
-			//14>40
+			//S>L
 			m_state = 1;
 		}
 	}
@@ -350,7 +372,7 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 			m_ma_medium.push_back(signals[1]);
 			m_ma_large.push_back(signals[2]);
 			m_slope.push_back(signals[3]);
-			m_order_signal.push_back(whiteStateMachine(m_slopeMin, m_stopLoss, last_trade_investment));
+			m_order_signal.push_back(whiteStateMachine(last_trade_investment));
 			m_portfolio_value.push_back(orderAnalyser(current_cash, last_trade_investment, cfd_units));
 			++m_point;
 		}

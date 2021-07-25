@@ -71,9 +71,9 @@ public:
 	
 	int stateAnalyser(); 
 
-	bool checkStopLoss(double stopLoss, double last_trade_investment);
+	bool checkStopLoss(double last_trade_investment);
 
-	int whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment);
+	int whiteStateMachine(double last_trade_investment);
 	
 	double orderAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
 

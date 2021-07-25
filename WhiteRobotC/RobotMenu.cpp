@@ -79,11 +79,11 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM;
 	cout << "Please enter the large window points size (Example:40): " << endl;
 	cin >> maPointsL;
-	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
+	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 400 points for H4): " << endl;
 	cin >> slopePoints;
-	cout << "Please enter the minimun slope to establish a trend (Example:0.001): " << endl;
+	cout << "Please enter the minimun slope to establish a trend (Example:0.01): " << endl;
 	cin >> slopeMin;
-	cout << "Please enter the Stop-loss parameter (Example:0.02): " << endl;
+	cout << "Please enter the Stop-loss parameter (Example:0.05): " << endl;
 	cin >> stopLoss;
 	cout << "Please enter the logic Mode for Long Trades [1-7]: " << endl;
 	cin >> modeUp;
