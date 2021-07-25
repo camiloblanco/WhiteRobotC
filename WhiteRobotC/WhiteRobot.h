@@ -1,4 +1,6 @@
-#pragma once
+#pragma
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,6 +11,9 @@
 #include <vector> 
 #include <numeric>
 #include <algorithm>
+#include <chrono>
+#include <ctime>
+
 
 using namespace std;
 
@@ -18,13 +23,17 @@ public:
 	WhiteRobot();
 
 	vector<double> getPrices();
+
 	void displayData();
 
 	vector<string>  tokenize(string& str, char delim);
+
 	void loadData(string fileName);
 	
 	double movingAverage(vector<double> prices, int windowSize);
+
 	double movingSlope(const vector<double> prices, int windowSize);
+
 	vector<double> generateSignals(vector<double> prices, int maPointsS, int maPointsM, int maPointsL, int slopePoints);
 
 	
@@ -39,7 +48,13 @@ public:
 	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash);
 
 
-	void saveSimulation(string fileName);
+	string getTimeStr();
+
+	void printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss);
+	
+	void saveSimulation(string fileName, int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss);
+
+	void saveSimulationData(string fileName);
 
 	~WhiteRobot();
 

@@ -295,12 +295,74 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 }
 
 
-void WhiteRobot::saveSimulation(string fileName) {
+string WhiteRobot::getTimeStr() {
+		std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 
+		std::string s(30, '\0');
+		std::strftime(&s[0], s.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+		return s;
+}
+
+void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
 
 	cout << endl << "****************************************************************************" << endl;
-	cout << endl << "Initial statuts" << endl;
-	cout << "Date: " << m_dates[0] << " | " << "Price: " << m_prices[0] << " | " << "Portfolio value: " << m_portfolio_value[0] << " | " << endl;
+	cout << endl << "Simulation Results." << endl<<endl;
+	//date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
+
+	cout << "Simulation date: " << getTimeStr() << endl;
+	cout << "Initial index: " << m_prices[0] << endl;
+	cout << "Final index: " << m_prices.back() << endl;
+	cout << "Index return: " << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl;
+	cout << "Initial portfolio: " << m_portfolio_value[0] << endl;
+	cout << "Final portfolio: " << m_portfolio_value.back() << endl;
+	cout << "portfolio return: " << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << endl;
+
+	cout << "Small moving average points: " << maPointsS << endl;
+	cout << "Medium moving average point: " << maPointsM << endl;
+	cout << "Large moving average point: " << maPointsL << endl;
+	cout << "Slope points: " << slopePoints << endl;
+	cout << "Min slope: " << slopeMin << endl;
+	cout << "Stop loss: " << stopLoss << endl;
+	cout << "State machine mode Up: " << "1" << endl;
+	cout << "State machine mode Down: " << "1" << endl;
+
+	cout << endl << "End of simulation Results." << endl << endl;
+	cout << endl << "****************************************************************************" << endl;
+}
+
+void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
+
+	ofstream file_out;
+
+
+	// File format:
+	//date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, mode_up, mode_dn
+
+	file_out.open(fileName, std::ios_base::app);
+
+	file_out << getTimeStr() << ",";
+	file_out << m_prices[0] << ",";
+	file_out << m_prices.back() << ",";
+	file_out << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << ",";
+	file_out << m_portfolio_value[0] << ",";
+	file_out << m_portfolio_value.back() << ",";
+	file_out << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << ",";
+
+	file_out << maPointsS << ",";
+	file_out << maPointsM << ",";
+	file_out << maPointsL << ",";
+	file_out << slopePoints << ",";
+	file_out << slopeMin << ",";
+	file_out << stopLoss << ",";
+	file_out << "1" << ",";
+	file_out << "1" << endl;	
+
+	cout << endl << "Simulation results added to: "<< fileName << endl;
+
+}
+
+
+void WhiteRobot::saveSimulationData(string fileName) {
 
 	// Create an output filestream object
 	ofstream outFile(fileName);
@@ -315,14 +377,7 @@ void WhiteRobot::saveSimulation(string fileName) {
 	// close the output file
 	outFile.close();
 
-	cout << endl << "Simulation results" << endl;
-	cout << "Date: " << m_dates.back() << " | " << "Price: " << m_prices.back()<< " | " << "Portfolio value: " << m_portfolio_value.back() << " | " << endl;
-
-	cout << endl << "Returns" << endl;
-	cout << "Index return: " << 100*(m_prices.back() - m_prices[0])/ m_prices[0] << "% | " << "Portfolio Return: " << 100*(m_portfolio_value.back()- m_portfolio_value[0]) / m_portfolio_value[0] << "% | " << endl;
-
-
-	cout << endl << "Simulation saved" << endl;
+	cout << endl << "Simulation data saved into: "<< fileName << endl;
 }
 
 WhiteRobot::~WhiteRobot()

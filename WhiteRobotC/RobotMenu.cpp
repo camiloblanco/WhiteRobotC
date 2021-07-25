@@ -29,7 +29,7 @@ RobotMenu::RobotMenu() {
 
 // Clear the whole console
 void RobotMenu::clearConsole() {
-	cout << "\x1B[2J\x1B[H";
+	system("cls");
 }
 
 // Pause execution waiting for a key
@@ -49,7 +49,7 @@ void RobotMenu::readLine(string& description) {
 //
 void RobotMenu::testData() {
 	WhiteRobot robot;
-	robot.loadData("SPX500_USD_H4.CSV");
+	robot.loadData("index_data.csv");
 	robot.displayData();
 	menuPause();
 }
@@ -61,8 +61,8 @@ void RobotMenu::executeWhite () {
 	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
-	cout << "		White Robot C++ an algorimic trading program " << endl ;
-	cout << "					Version 1.0.0					 " << endl << endl;
+	cout << "		White Robot C++ an algorimic trading simulation program " << endl ;
+	cout << "				Version 1.1.0: simulations.csv generator		" << endl << endl;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
 	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
 	cin >> slopePoints;
@@ -76,13 +76,14 @@ void RobotMenu::executeWhite () {
 	cin >> slopeMin;
 	cout << "Please enter the Stop-loss parameter (Example:0.02): " << endl;
 	cin >> stopLoss;
-	cout << "Please enter the initial cash invesment (Example:895.3) " << endl;
+	cout << "Please enter the initial cash invesment (Example:1000) " << endl;
 	cin >> intialCash;
-	robot.loadData("SPX500_USD_H4.CSV");
+	robot.loadData("index_data.csv");
 
 	robot.whiteStrategy(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, intialCash);
-
-	robot.saveSimulation("portfolio_simulation.csv");
+	robot.printResults(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss);
+	robot.saveSimulation("simulations.csv", maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss);
+	robot.saveSimulationData("portfolio_simulation.csv");
 
 	menuPause();
 }
