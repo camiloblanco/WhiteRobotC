@@ -45,6 +45,7 @@ public:
 	//public member functions
 	void testData();
 	void executeWhite();
+	void radomWhite();
 	void mainMenu();
 	
 };

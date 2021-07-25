@@ -67,7 +67,28 @@ WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoi
 	m_short_trades_profit = 0;
 }
 
+
 //Getters and setters
+
+void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown) {
+	m_maPointsS = maPointsS;
+	m_maPointsM = maPointsM;
+	m_maPointsL = maPointsL;
+	m_slopePoints = slopePoints;
+	m_slopeMin = slopeMin;
+	m_stopLoss = stopLoss;
+	m_modeUp = modeUp;
+	m_modeDown = modeDown;
+
+	m_point = 0;
+	m_state = 1;
+	m_long_trades = 0;
+	m_short_trades = 0;
+	m_good_long_trades = 0;
+	m_good_short_trades = 0;
+	m_long_trades_profit = 0;
+	m_short_trades_profit = 0;
+}
 
 vector<double> WhiteRobot::getPrices() {
 	return this->m_prices;
@@ -110,9 +131,8 @@ void WhiteRobot::loadData(string fileName) {
 	string line;
 	ifstream myStream(fileName);
 	if (myStream.is_open()) {
-
+		cout << endl <<" " << fileName << " successfully opened." << line << endl;
 		getline(myStream, line);
-
 		cout << "The first line is: " << line << endl;
 
 
@@ -400,13 +420,13 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 
 // White strategy backtest implementation
 void WhiteRobot::whiteStrategy( double intialCash) {
-	cout << "Executing White strategy" << endl;
+	//cout << "Executing White strategy" << endl;
 
 	double current_cash = intialCash;
 	double last_trade_investment = 1;
 	double cfd_units = 0;
 
-	if (m_slopePoints > m_maPointsL && m_maPointsL > m_maPointsM && m_maPointsM > m_maPointsS) {
+	if (m_slopePoints > 0 && m_maPointsL > 0 && m_maPointsM > 0 &&  m_maPointsS > 0) {
 
 		// Loop over the first part of the dataset
 		for (auto it = m_prices.begin(); it != m_prices.begin() + m_slopePoints; ++it) {

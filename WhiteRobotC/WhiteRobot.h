@@ -47,10 +47,13 @@ class WhiteRobot
 public:
 
 	//constructors
+
 	WhiteRobot();
+
 	WhiteRobot(int maPointsS,	int maPointsM, int maPointsL, int slopePoints, double slopeMin,	double stopLoss, int modeUp, int modeDown);
 
 	//Getters and setters
+	void setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown);
 	vector<double> getPrices();
 	void printPrices();
 	string getTimeStr();
