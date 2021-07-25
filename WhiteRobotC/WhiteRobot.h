@@ -105,8 +105,6 @@ private:
 	int m_modeDown;
 
 
-
-
 	vector<string> m_dates;
 	vector<double> m_prices;
 	vector<double> m_volume;
@@ -121,10 +119,18 @@ private:
 
 	int m_long_trades;
 	int m_short_trades;
+	int m_good_long_trades;
+	int m_good_short_trades;
+	double m_long_trades_profit;
+	double m_short_trades_profit;
 
 	vector<int> m_order_signal;
 
+	vector<double> m_current_cash;
+	vector<double> m_cfd_units;
+	vector<double> m_last_trade_investment;
 	vector<double> m_portfolio_value;
+	vector<double> m_trade_profit;
 	vector<int> m_stop_loss;
 
 };
