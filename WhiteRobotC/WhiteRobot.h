@@ -48,6 +48,7 @@ public:
 
 	//constructors
 	WhiteRobot();
+	WhiteRobot(int maPointsS,	int maPointsM, int maPointsL, int slopePoints, double slopeMin,	double stopLoss, int modeUp, int modeDown);
 
 	//Getters and setters
 	vector<double> getPrices();
@@ -70,20 +71,20 @@ public:
 	
 	int stateAnalyser(); 
 
-	bool checkStopLoss(double stopLoss, double last_trade_investment);
+	bool checkStopLoss(double last_trade_investment);
 
-	int whiteStateMachine(double slopeMin, double stopLoss, double last_trade_investment);
+	int whiteStateMachine(double last_trade_investment);
 	
 	double orderAnalyser(double& current_cash, double& last_trade_investment, double& cfd_units);
 
-	void whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, double intialCash);
+	void whiteStrategy(double intialCash);
 
 
 	
 
-	void printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss);
+	void printResults();
 	
-	void saveSimulation(string fileName, int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss);
+	void saveSimulation(string fileName);
 
 	void saveSimulationData(string fileName);
 
@@ -93,6 +94,17 @@ public:
 private:
 
 	//private variable members
+
+	int m_maPointsS;
+	int m_maPointsM;
+	int m_maPointsL;
+	int m_slopePoints;
+	double m_slopeMin;
+	double m_stopLoss;
+	int m_modeUp;
+	int m_modeDown;
+
+
 	vector<string> m_dates;
 	vector<double> m_prices;
 	vector<double> m_volume;
@@ -107,10 +119,19 @@ private:
 
 	int m_long_trades;
 	int m_short_trades;
+	int m_good_long_trades;
+	int m_good_short_trades;
+	double m_long_trades_profit;
+	double m_short_trades_profit;
 
+	vector<int> m_state_signal;
 	vector<int> m_order_signal;
 
+	vector<double> m_current_cash;
+	vector<double> m_cfd_units;
+	vector<double> m_last_trade_investment;
 	vector<double> m_portfolio_value;
+	vector<double> m_trade_profit;
 	vector<int> m_stop_loss;
 
 };
