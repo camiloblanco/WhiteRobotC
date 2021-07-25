@@ -54,6 +54,10 @@ void RobotMenu::readLine(string& description) {
 void RobotMenu::testData() {
 	WhiteRobot robot;
 	robot.loadData("index_data.csv");
+	clearConsole();
+	cout << "****************************************************************************" << endl;
+	cout << "			Test and print the data from the CSV File " << endl;
+	cout << "****************************************************************************" << endl << endl;
 	robot.printPrices();
 	menuPause();
 }
@@ -65,7 +69,8 @@ void RobotMenu::executeWhite () {
 	double slopeMin, intialCash, stopLoss;
 	clearConsole();
 	cout << "****************************************************************************" << endl;
-	cout << "			2. Single White Robot simulation " << endl << endl ;
+	cout << "			2. Single White Robot simulation " << endl;
+	cout << "****************************************************************************" << endl << endl;
 	cout << " Enter the parameters of the simulation:" << endl << endl;
 	cout << "Please enter the number of points to use for calculating the Slope (3 months its about 395 points for H4): " << endl;
 	cin >> slopePoints;
@@ -99,8 +104,8 @@ void RobotMenu::mainMenu() {
 	while (option != 0) {
 		clearConsole();
 		cout << "****************************************************************************" << endl;
-		cout << "		White Robot C++ an algorimic trading backtesting program " << endl << endl;
-		cout << "				Version 1.1.0: simulations.csv generator		" << endl << endl;
+		cout << "	White Robot C++ an algorimic trading backtesting program " << endl << endl;
+		cout << "		Version 1.1: simulations.csv generator		" << endl << endl;
 		cout << "Select an option by entering the given number:" << endl << endl;
 		cout << "1. Test and print the data from the CSV File" << endl;
 		cout << "2. Execute the a single White Robot strategy" << endl;

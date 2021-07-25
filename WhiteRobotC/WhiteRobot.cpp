@@ -30,6 +30,8 @@ WhiteRobot::WhiteRobot()
 {
 	m_point = 0;
 	m_state = 1;
+	m_long_trades=0;
+	m_short_trades=0;
 }
 
 //Getters and setters
@@ -256,6 +258,7 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 		last_trade_investment = current_cash;
 		current_cash = 0;
 		cfd_units = last_trade_investment / m_prices[m_point];
+		++m_long_trades;
 	}
 	else if (m_order_signal[m_point] == 0 && m_order_signal[m_point - 1] == 1) {
 		//Stop Long trade
@@ -267,6 +270,7 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 		last_trade_investment = current_cash;
 		current_cash = 0;
 		cfd_units = last_trade_investment / m_prices[m_point];
+		++m_short_trades;
 	}
 	else if (m_order_signal[m_point] == 0 && m_order_signal[m_point - 1] == -1) {
 		//Stop short trade
@@ -340,16 +344,26 @@ void WhiteRobot::whiteStrategy(int maPointsS, int maPointsM, int maPointsL, int 
 void WhiteRobot::printResults(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss) {
 
 	cout << endl << "****************************************************************************" << endl;
-	cout << endl << "Simulation Results." << endl<<endl;
-	//date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
+	cout << endl << "Simulation Results:" << endl<<endl;
+	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
 
-	cout << "Simulation date: " << getTimeStr() << endl;
+	cout << "Simulation date: " << getTimeStr() << endl << endl;
+
+	cout << "Initial date: " << m_dates[0] << endl ;
+	cout << "Final date: " << m_dates.back() << endl;
 	cout << "Initial index: " << m_prices[0] << endl;
 	cout << "Final index: " << m_prices.back() << endl;
-	cout << "Index return: " << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl;
-	cout << "Initial portfolio: " << m_portfolio_value[0] << endl;
-	cout << "Final portfolio: " << m_portfolio_value.back() << endl;
-	cout << "portfolio return: " << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << endl;
+	cout << "Index return: " << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl << endl;
+
+	cout << "Initial portfolio value: " << m_portfolio_value[0] << endl;
+	cout << "Final portfolio value: " << m_portfolio_value.back() << endl;
+	cout << "portfolio return: " << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << endl << endl;
+
+	cout << "Long trades: " << m_long_trades << endl;
+	cout << "Short trades: " << m_short_trades << endl;
+
+	cout << endl << "****************************************************************************" << endl;
+	cout << endl << "Simulation Parameters:" << endl << endl;
 
 	cout << "Small moving average points: " << maPointsS << endl;
 	cout << "Medium moving average point: " << maPointsM << endl;
@@ -369,19 +383,24 @@ void WhiteRobot::saveSimulation(string fileName, int maPointsS, int maPointsM, i
 
 	ofstream file_out;
 
-
 	// File format:
-	//date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, mode_up, mode_dn
+	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
 
 	file_out.open(fileName, std::ios_base::app);
 
 	file_out << getTimeStr() << ",";
+	file_out << m_dates[0] << ",";
+	file_out << m_dates.back() << ",";
 	file_out << m_prices[0] << ",";
 	file_out << m_prices.back() << ",";
 	file_out << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << ",";
+
 	file_out << m_portfolio_value[0] << ",";
 	file_out << m_portfolio_value.back() << ",";
 	file_out << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << ",";
+
+	file_out << m_long_trades << ",";
+	file_out << m_short_trades << ",";
 
 	file_out << maPointsS << ",";
 	file_out << maPointsM << ",";
