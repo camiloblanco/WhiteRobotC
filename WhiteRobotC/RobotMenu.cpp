@@ -165,15 +165,19 @@ void RobotMenu::radomWhite() {
 		maPointsM = generator_maPointsM(rng);
 		maPointsL = generator_maPointsL(rng);
 		slopePoints = generator_slopePoints(rng);
+
 		slopeMin = generator_slopeMin(rng);
+		slopeMin = floor((slopeMin * 10000) + .5) / 10000;
 		stopLoss = generator_stopLoss(rng);
+		stopLoss = floor((stopLoss * 10000) + .5) / 10000;
+
 		modeUp = generator_mode(rng);
 		modeDown = generator_mode(rng);
 		
 		robot.setParameters(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, modeUp, modeDown);
 		robot.whiteStrategy(intialCash);
 		robot.saveSimulation("simulations.csv");
-		if ((i + 1) % 10 == 0) {
+		if ((i + 1) % 100 == 0) {
 			cout << "Simulation number: " << i+1 <<endl;
 		}
 	}
@@ -253,15 +257,19 @@ void RobotMenu::closedRadomWhite() {
 		maPointsM = generator_maPointsM(rng);
 		maPointsL = generator_maPointsL(rng);
 		slopePoints = generator_slopePoints(rng);
+
 		slopeMin = generator_slopeMin(rng);
+		slopeMin = floor((slopeMin * 10000) + .5) / 10000;
 		stopLoss = generator_stopLoss(rng);
+		stopLoss = floor((stopLoss * 10000) + .5) / 10000;
+
 		modeUp = generator_mode(rng);
 		modeDown = generator_mode(rng);
 
 		robot.setParameters(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, modeUp, modeDown);
 		robot.whiteStrategy(intialCash);
 		robot.saveSimulation("simulations.csv");
-		if ((i+1) % 10 == 0) {
+		if ((i+1) % 100 == 0) {
 			cout << "Simulation number: " << i+1<<endl;
 		}
 	}
@@ -347,8 +355,11 @@ void RobotMenu::FixedBrainRadomWhite() {
 		maPointsM = generator_maPointsM(rng);
 		maPointsL = generator_maPointsL(rng);
 		slopePoints = generator_slopePoints(rng);
+
 		slopeMin = generator_slopeMin(rng);
+		slopeMin = floor((slopeMin * 10000) + .5) / 10000;
 		stopLoss = generator_stopLoss(rng);
+		stopLoss = floor((stopLoss * 10000) + .5) / 10000;
 
 		robot.setParameters(maPointsS, maPointsM, maPointsL, slopePoints, slopeMin, stopLoss, modeUp, modeDown);
 		robot.whiteStrategy(intialCash);

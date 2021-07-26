@@ -40,6 +40,10 @@ WhiteRobot::WhiteRobot()
 	
 	m_point = 0;
 	m_state = 1;
+	m_long_stop_loss=0;
+	m_short_stop_loss=0;
+
+
 	m_long_trades=0;
 	m_short_trades=0;
 	m_good_long_trades = 0;
@@ -60,6 +64,9 @@ WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoi
 
 	m_point = 0;
 	m_state = 1;
+	m_long_stop_loss = 0;
+	m_short_stop_loss = 0;
+
 	m_long_trades = 0;
 	m_short_trades = 0;
 	m_good_long_trades = 0;
@@ -83,6 +90,8 @@ void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int 
 
 	m_point = 0;
 	m_state = 1;
+	m_long_stop_loss = 0;
+	m_short_stop_loss = 0;
 
 	m_long_trades = 0;
 	m_short_trades = 0;
@@ -242,11 +251,17 @@ bool WhiteRobot::checkStopLoss(double last_trade_investment) {
 
 	double curren_trade_profit = (m_portfolio_value[m_point-1] - last_trade_investment) / last_trade_investment;
 
-	if ( (m_state == 3 || m_state == 4 || m_state == 6 || m_state == 7) &&  curren_trade_profit < - m_stopLoss) {
+	if ( (m_state == 3 || m_state == 4 ) &&  curren_trade_profit < - m_stopLoss) {
 		m_stop_loss.push_back(1);
+		m_long_stop_loss ++;
 		return true;
 	}
-	if (m_point == m_prices.size()-1) {
+	else if ((m_state == 6 || m_state == 7) && curren_trade_profit < -m_stopLoss) {
+		m_stop_loss.push_back(1);
+		m_short_stop_loss ++;
+		return true;
+	}
+	else if (m_point == m_prices.size()-1) {
 		m_stop_loss.push_back(1);
 		return true;
 	}
@@ -443,11 +458,13 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 	double current_cash = intialCash;
 	double last_trade_investment = 1;
 	double cfd_units = 0;
+	vector<int> max_vect{ m_maPointsS, m_maPointsM, m_maPointsL, m_slopePoints };
+	int max_window_size= *max_element(max_vect.begin(), max_vect.end());
 
 	if (m_slopePoints > 1 && m_maPointsL > 1 && m_maPointsM > 1 &&  m_maPointsS > 1) {
 
 		// Loop over the first part of the dataset
-		for (auto it = m_prices.begin(); it != m_prices.begin() + m_slopePoints; ++it) {
+		for (auto it = m_prices.begin(); it != m_prices.begin() + max_window_size; ++it) {
 			m_ma_small.push_back(0.0);
 			m_ma_medium.push_back(0.0);
 			m_ma_large.push_back(0.0);
@@ -468,9 +485,9 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 		}
 
 		// Loop over the tradable part of the dataset
-		for (auto it = m_prices.begin() + m_slopePoints; it != m_prices.end(); ++it) {
+		for (auto it = m_prices.begin() + max_window_size; it != m_prices.end(); ++it) {
 			vector<double> window;
-			window = vector < double >(it - m_slopePoints+1, it+1);
+			window = vector < double >(it - max_window_size +1, it+1);
 			vector<double> signals = generateSignals(window, m_maPointsS, m_maPointsM, m_maPointsL, m_slopePoints);
 			m_ma_small.push_back(signals[0]);
 			m_ma_medium.push_back(signals[1]);
@@ -523,21 +540,25 @@ void WhiteRobot::printResults() {
 	cout << "Initial date: " << m_dates[0] << endl ;
 	cout << "Final date: " << m_dates.back() << endl << endl;
 
-	cout << "Initial index: " << m_prices[0] << endl;
-	cout << "Final index: " << m_prices.back() << endl;
-	cout << "Index return: " << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl << endl;
+	cout << "Initial index: " << fixed << setprecision(2) << m_prices[0] << endl;
+	cout << "Final index: " << fixed << setprecision(2) << m_prices.back() << endl;
+	cout << "Index return: " << fixed << setprecision(2) << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl << endl;
 
-	cout << "Initial portfolio value: " << m_portfolio_value[0] << endl;
-	cout << "Final portfolio value: " << m_portfolio_value.back() << endl;
-	cout << "portfolio return: " << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << endl << endl;
+	cout << "Initial portfolio value: " << fixed << setprecision(2) << m_portfolio_value[0] << endl;
+	cout << "Final portfolio value: " << fixed << setprecision(2) << m_portfolio_value.back() << endl;
+	cout << "portfolio return: " << fixed << setprecision(2) << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << endl << endl;
+
+	cout << endl << "Trades statistics:" << endl << endl;
 
 	cout << "Long trades: " << m_long_trades << endl;
 	cout << "Good long trades: " << m_good_long_trades << endl;
-	cout << "Long trades Profit: " << m_long_trades_profit << endl << endl;
+	cout << "Long trades Profit: " << fixed << setprecision(2) << m_long_trades_profit << endl;
+	cout << "Activations of Long stop-loss: " << m_long_stop_loss << endl << endl;
 
 	cout << "Short trades: " << m_short_trades << endl;
 	cout << "Good short trades: " << m_good_short_trades << endl;
-	cout << "Short trades profit: " << m_short_trades_profit << endl;
+	cout << "Short trades profit: " << fixed << setprecision(2) << m_short_trades_profit << endl;
+	cout << "Activations of short stop-loss: " << m_short_stop_loss << endl << endl;
 
 	cout << endl << "Simulation Parameters:" << endl << endl;
 
@@ -545,8 +566,8 @@ void WhiteRobot::printResults() {
 	cout << "Medium moving average point: " << m_maPointsM << endl;
 	cout << "Large moving average point: " << m_maPointsL << endl;
 	cout << "Slope points: " << m_slopePoints << endl;
-	cout << "Min slope: " << m_slopeMin << endl;
-	cout << "Stop loss: " << m_stopLoss << endl;
+	cout << "Min slope: " << fixed << setprecision(4) << m_slopeMin << endl;
+	cout << "Stop loss: " << fixed << setprecision(4) << m_stopLoss << endl;
 	cout << "State machine mode Up: " << m_modeUp << endl;
 	cout << "State machine mode Down: " << m_modeDown << endl;
 
@@ -560,34 +581,37 @@ void WhiteRobot::saveSimulation(string fileName) {
 	ofstream file_out;
 
 	// File format:
-	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit, short_trades, good_short_trades, short_trades_profit, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
+	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit,long_stop_loss, short_trades, good_short_trades, short_trades_profit, short_stop_loss, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
 
 	file_out.open(fileName, ios_base::app);
 
 	file_out << getTimeStr() << ",";
 	file_out << m_dates[0] << ",";
 	file_out << m_dates.back() << ",";
-	file_out << m_prices[0] << ",";
-	file_out << m_prices.back() << ",";
-	file_out << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << ",";
+	file_out << fixed << setprecision(2) << m_prices[0] << ",";
+	file_out << fixed << setprecision(2) << m_prices.back() << ",";
+	file_out << fixed << setprecision(2) << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << ",";
 
-	file_out << m_portfolio_value[0] << ",";
-	file_out << m_portfolio_value.back() << ",";
-	file_out << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << ",";
+	file_out << fixed << setprecision(2) << m_portfolio_value[0] << ",";
+	file_out << fixed << setprecision(2) << m_portfolio_value.back() << ",";
+	file_out << fixed << setprecision(2) << 100 * (m_portfolio_value.back() - m_portfolio_value[0]) / m_portfolio_value[0] << "%" << ",";
 
 	file_out << m_long_trades << ",";
 	file_out << m_good_long_trades << ",";
-	file_out << m_long_trades_profit << ",";
+	file_out << fixed << setprecision(2) << m_long_trades_profit << ",";
+	file_out << m_long_stop_loss << ",";
+
 	file_out << m_short_trades << ",";
 	file_out << m_good_short_trades << ",";
-	file_out << m_short_trades_profit << ",";
+	file_out << fixed << setprecision(2) << m_short_trades_profit << ",";
+	file_out << m_short_stop_loss << ",";
 
 	file_out << m_maPointsS << ",";
 	file_out << m_maPointsM << ",";
 	file_out << m_maPointsL << ",";
 	file_out << m_slopePoints << ",";
-	file_out << m_slopeMin << ",";
-	file_out << m_stopLoss << ",";
+	file_out << fixed << setprecision(4) << m_slopeMin << ",";
+	file_out << fixed << setprecision(4) << m_stopLoss << ",";
 	file_out << m_modeUp << ",";
 	file_out << m_modeDown << endl;
 

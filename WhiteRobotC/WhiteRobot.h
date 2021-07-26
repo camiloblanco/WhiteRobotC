@@ -119,6 +119,8 @@ private:
 
 	int m_point;
 	int m_state;
+	int m_long_stop_loss;
+	int m_short_stop_loss;
 
 	int m_long_trades;
 	int m_short_trades;
