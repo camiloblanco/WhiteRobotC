@@ -15,7 +15,6 @@
 * Mail - Web	:	shanks.p.95@gmail.com -:mail@camiloblanco.com
 ****************************************************************************************/
 
-
 /****************************************************************************************
 *							#GUARDS #INCLUDES AND #CONSTANTS							*
 ****************************************************************************************/
@@ -24,6 +23,7 @@
 #include<iostream>
 #include<string>
 #include<stdlib.h>
+#include <random>
 #include "WhiteRobot.h"
 
 using namespace std;
@@ -45,6 +45,9 @@ public:
 	//public member functions
 	void testData();
 	void executeWhite();
+	void radomWhite();
+	void closedRadomWhite();
+	void FixedBrainRadomWhite();
 	void mainMenu();
 	
 };
