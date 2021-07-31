@@ -325,7 +325,7 @@ void RobotMenu::closedRadomWhite() {
 
 
 
-// Execute a series of random White Robots with parameters in closed intervals
+// Execute a series of random White Robots with parameters in closed intervals and Fixed state machine
 void RobotMenu::FixedBrainRadomWhite() {
 
 	int testNumber, modeUp, modeDown;
