@@ -29,17 +29,24 @@
 
 WhiteRobot::WhiteRobot()
 {
-	m_maPointsS=1;
-	m_maPointsM=2;
-	m_maPointsL=3;
-	m_slopePoints=5;
-	m_slopeMin=0.1;
+	m_maPointsS_long=1;
+	m_maPointsM_long=2;
+	m_maPointsL_long=3;
+	m_slopeMin_long=0.1;
+	m_mode_long=1;
+
+	m_maPointsS_short=1;
+	m_maPointsM_short=2;
+	m_maPointsL_short=3;
+	m_slopeMin_short=0.1;
+	m_mode_short=1;
+
+	m_slopePoints=4;
 	m_stopLoss=0.1;
-	m_modeUp=1;
-	m_modeDown=1; 
 	
 	m_point = 0;
 	m_state = 1;
+
 	m_long_stop_loss=0;
 	m_short_stop_loss=0;
 
@@ -52,18 +59,26 @@ WhiteRobot::WhiteRobot()
 	m_short_trades_profit = 0;
 }
 
-WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown) {
-	m_maPointsS = maPointsS;
-	m_maPointsM = maPointsM;
-	m_maPointsL = maPointsL;
+WhiteRobot::WhiteRobot(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss) {
+	
+	m_maPointsS_long = maPointsS_long;
+	m_maPointsM_long = maPointsM_long;
+	m_maPointsL_long = maPointsL_long;
+	m_slopeMin_long = slopeMin_long;
+	m_mode_long = mode_long;
+
+	m_maPointsS_short = maPointsS_short;
+	m_maPointsM_short = maPointsM_short;
+	m_maPointsL_short = maPointsL_short;
+	m_slopeMin_short = slopeMin_short;
+	m_mode_short = mode_short;
+
 	m_slopePoints = slopePoints;
-	m_slopeMin = slopeMin;
 	m_stopLoss = stopLoss;
-	m_modeUp = modeUp;
-	m_modeDown = modeDown;
 
 	m_point = 0;
 	m_state = 1;
+
 	m_long_stop_loss = 0;
 	m_short_stop_loss = 0;
 
@@ -78,15 +93,22 @@ WhiteRobot::WhiteRobot(int maPointsS, int maPointsM, int maPointsL, int slopePoi
 
 //Getters and setters
 
-void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown) {
-	m_maPointsS = maPointsS;
-	m_maPointsM = maPointsM;
-	m_maPointsL = maPointsL;
+void WhiteRobot::setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss) {
+	
+	m_maPointsS_long = maPointsS_long;
+	m_maPointsM_long = maPointsM_long;
+	m_maPointsL_long = maPointsL_long;
+	m_slopeMin_long = slopeMin_long;
+	m_mode_long = mode_long;
+
+	m_maPointsS_short = maPointsS_short;
+	m_maPointsM_short = maPointsM_short;
+	m_maPointsL_short = maPointsL_short;
+	m_slopeMin_short = slopeMin_short;
+	m_mode_short = mode_short;
+
 	m_slopePoints = slopePoints;
-	m_slopeMin = slopeMin;
 	m_stopLoss = stopLoss;
-	m_modeUp = modeUp;
-	m_modeDown = modeDown;
 
 	m_point = 0;
 	m_state = 1;
@@ -100,9 +122,15 @@ void WhiteRobot::setParameters(int maPointsS, int maPointsM, int maPointsL, int 
 	m_long_trades_profit = 0;
 	m_short_trades_profit = 0;
 
-	m_ma_small.clear();
-	m_ma_medium.clear();
-	m_ma_large.clear();
+	m_ma_small_long.clear();
+	m_ma_medium_long.clear();
+	m_ma_large_long.clear();
+
+	m_ma_small_short.clear();
+	m_ma_medium_short.clear();
+	m_ma_large_short.clear();
+
+
 	m_slope.clear();
 	m_state_signal.clear();
 	m_order_signal.clear();
@@ -215,18 +243,17 @@ double WhiteRobot::movingSlope(const vector<double> prices, int windowSize) {
 }
 
 // Signal generator function
-vector<double> WhiteRobot::generateSignals(vector<double> prices, int maPointsS, int maPointsM, int maPointsL, int slopePoints) {
-	vector<double> signals;
-	double maS, maM, maL, slope;
-	maS = movingAverage(prices, maPointsS);
-	signals.push_back(maS);
-	maM = movingAverage(prices, maPointsM);
-	signals.push_back(maM);
-	maL = movingAverage(prices, maPointsL);
-	signals.push_back(maL);
-	slope = movingSlope(prices, slopePoints);
-	signals.push_back(slope);
-	return signals;
+void WhiteRobot::generateSignals(vector<double> prices_window) {
+	
+	m_ma_small_long.push_back(movingAverage(prices_window, m_maPointsS_long));
+	m_ma_medium_long.push_back(movingAverage(prices_window, m_maPointsM_long));
+	m_ma_large_long.push_back(movingAverage(prices_window, m_maPointsL_long));
+
+	m_ma_small_short.push_back(movingAverage(prices_window, m_maPointsS_short));
+	m_ma_medium_short.push_back(movingAverage(prices_window, m_maPointsM_short));
+	m_ma_large_short.push_back(movingAverage(prices_window, m_maPointsL_short));
+
+	m_slope.push_back(movingSlope(prices_window, m_slopePoints));
 }
 
 // Generates the order signal from the state of the State Machine
@@ -280,97 +307,102 @@ int WhiteRobot::whiteStateMachine( double last_trade_investment) {
 		m_state = 1;
 	}
 	else if (m_state == 1) {
-		if (m_slope[m_point] >= m_slopeMin && m_modeUp != 0) {
+		if (m_slope[m_point] >= m_slopeMin_long && m_mode_long != 0) {
 			//positive trend
-			if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 2 || m_modeUp == 3)) {
+			if ((m_ma_small_long[m_point] > m_ma_medium_long[m_point]) && (m_ma_small_long[m_point - 1] < m_ma_medium_long[m_point - 1]) && (m_mode_long == 1 || m_mode_long == 2 || m_mode_long == 3)) {
 				//S>M  big cycle
 				m_state = 2;
 			}
-			else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 4 || m_modeUp == 5 )) {
+			else if ((m_ma_small_long[m_point] > m_ma_large_long[m_point]) && (m_ma_small_long[m_point - 1] < m_ma_large_long[m_point - 1]) && (m_mode_long == 4 || m_mode_long == 5 )) {
 				//S>L
 				m_state = 3;
 			}
-			else if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeUp == 6 || m_modeUp == 7 )) {
+			else if ((m_ma_small_long[m_point] > m_ma_medium_long[m_point]) && (m_ma_small_long[m_point - 1] < m_ma_medium_long[m_point - 1]) && (m_mode_long == 6 || m_mode_long == 7 )) {
 				//S>M small cycle
 				m_state = 4;
 			}
 		}
-		else if (m_slope[m_point] < -m_slopeMin && m_modeUp != 0) {
+		else if (m_slope[m_point] < -m_slopeMin_short && m_mode_long != 0) {
 			//negative trend
-			if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 2 || m_modeDown == 3)) {
+			if ((m_ma_small_short[m_point] < m_ma_medium_short[m_point]) && (m_ma_small_short[m_point - 1] > m_ma_medium_short[m_point - 1]) && (m_mode_short == 1 || m_mode_short == 2 || m_mode_short == 3)) {
 				//S<M big cycle
 				m_state = 5;
 			}
-			else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 4 || m_modeDown == 5)) {
+			else if ((m_ma_small_short[m_point] < m_ma_large_short[m_point]) && (m_ma_small_short[m_point - 1] > m_ma_large_short[m_point - 1]) && (m_mode_short == 4 || m_mode_short == 5)) {
 				//S<L
 				m_state = 6;
 			}
-			else if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeDown == 6 || m_modeDown == 7)) {
+			else if ((m_ma_small_short[m_point] < m_ma_medium_short[m_point]) && (m_ma_small_short[m_point - 1] > m_ma_medium_short[m_point - 1]) && (m_mode_short == 6 || m_mode_short == 7)) {
 				//S<M small cycle
 				m_state = 7;
 			}
 		}
 	}
 	else if (m_state == 2) {
-		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 2)) {
+		if ((m_ma_small_long[m_point] > m_ma_large_long[m_point]) && (m_ma_small_long[m_point - 1] < m_ma_large_long[m_point - 1]) && (m_mode_long == 1 || m_mode_long == 2)) {
 			//S>L big cycle
 			m_state = 3;
 		}
-		else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeUp == 3)) {
+		else if ((m_ma_small_long[m_point] > m_ma_large_long[m_point]) && (m_ma_small_long[m_point - 1] < m_ma_large_long[m_point - 1]) && (m_mode_long == 3)) {
 			//S>L medium cycle
 			m_state = 4;
 		}
 	}
 	else if (m_state == 3) {
-		if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 5)) {
+		if ((m_ma_small_long[m_point] < m_ma_medium_long[m_point]) && (m_ma_small_long[m_point - 1] > m_ma_medium_long[m_point - 1]) && (m_mode_long == 1 || m_mode_long == 5)) {
 			//S<M 
 			m_state = 4;
 		}
-		else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 2 || m_modeUp == 4)) {
+		else if ((m_ma_small_long[m_point] < m_ma_large_long[m_point]) && (m_ma_small_long[m_point - 1] > m_ma_large_long[m_point - 1]) && (m_mode_long == 2 || m_mode_long == 4)) {
 			//S<L 
 			m_state = 1;
 		}
 	}
 	else if (m_state == 4) {
-		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeUp == 1 || m_modeUp == 3 || m_modeUp == 5 || m_modeUp == 6 )) {
+		if ((m_ma_small_long[m_point] < m_ma_large_long[m_point]) && (m_ma_small_long[m_point - 1] > m_ma_large_long[m_point - 1]) && (m_mode_long == 1 || m_mode_long == 3 || m_mode_long == 5 || m_mode_long == 6 )) {
 			//S<L
 			m_state = 1;
 		}
-		if ((m_ma_small[m_point] < m_ma_medium[m_point]) && (m_ma_small[m_point - 1] > m_ma_medium[m_point - 1]) && (m_modeUp == 7)) {
+		if ((m_ma_small_long[m_point] < m_ma_medium_long[m_point]) && (m_ma_small_long[m_point - 1] > m_ma_medium_long[m_point - 1]) && (m_mode_long == 7)) {
 			//S<M 
 			m_state = 1;
 		}
 	}
 	else if (m_state == 5) {
-		if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 2)) {
+		if ((m_ma_small_short[m_point] < m_ma_large_short[m_point]) && (m_ma_small_short[m_point - 1] > m_ma_large_short[m_point - 1]) && (m_mode_short == 1 || m_mode_short == 2)) {
 			//S<L big cycle
 			m_state = 6;
 		}
-		else if ((m_ma_small[m_point] < m_ma_large[m_point]) && (m_ma_small[m_point - 1] > m_ma_large[m_point - 1]) && (m_modeDown == 3)) {
+		else if ((m_ma_small_short[m_point] < m_ma_large_short[m_point]) && (m_ma_small_short[m_point - 1] > m_ma_large_short[m_point - 1]) && (m_mode_short == 3)) {
 			//S<L medium cycle
 			m_state = 7;
 		}
 	}
 	else if (m_state == 6) {
-		if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 5)) {
+		if ((m_ma_small_short[m_point] > m_ma_medium_short[m_point]) && (m_ma_small_short[m_point - 1] < m_ma_medium_short[m_point - 1]) && (m_mode_short == 1 || m_mode_short == 5)) {
 			//S>M
 			m_state = 7;
 		}
-		else if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeDown == 2 || m_modeDown == 4)) {
+		else if ((m_ma_small_short[m_point] > m_ma_large_short[m_point]) && (m_ma_small_short[m_point - 1] < m_ma_large_short[m_point - 1]) && (m_mode_short == 2 || m_mode_short == 4)) {
 			//S>L 
 			m_state = 1;
 		}
 	}
 	else if (m_state == 7) {
-		if ((m_ma_small[m_point] > m_ma_large[m_point]) && (m_ma_small[m_point - 1] < m_ma_large[m_point - 1]) && (m_modeDown == 1 || m_modeDown == 3 || m_modeDown == 5 || m_modeDown == 6)) {
+		if ((m_ma_small_short[m_point] > m_ma_large_short[m_point]) && (m_ma_small_short[m_point - 1] < m_ma_large_short[m_point - 1]) && (m_mode_short == 1 || m_mode_short == 3 || m_mode_short == 5 || m_mode_short == 6)) {
 			//S>L
 			m_state = 1;
 		}
-		else if ((m_ma_small[m_point] > m_ma_medium[m_point]) && (m_ma_small[m_point - 1] < m_ma_medium[m_point - 1]) && (m_modeDown == 7)) {
+		else if ((m_ma_small_short[m_point] > m_ma_medium_short[m_point]) && (m_ma_small_short[m_point - 1] < m_ma_medium_short[m_point - 1]) && (m_mode_short == 7)) {
 			//S>M 
 			m_state = 1;
 		}
 	}
+	else {
+		m_state = 1;
+	}
+
+
 	m_state_signal.push_back(m_state);
 	// Return the order signal according to the state
 	return stateAnalyser();
@@ -441,7 +473,6 @@ double  WhiteRobot::orderAnalyser(double& current_cash, double& last_trade_inves
 		m_trade_profit.push_back(0);
 	}
 
-
 	m_current_cash.push_back(current_cash);
 	m_cfd_units.push_back(cfd_units);
 	m_last_trade_investment.push_back(last_trade_investment);
@@ -458,16 +489,22 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 	double current_cash = intialCash;
 	double last_trade_investment = 1;
 	double cfd_units = 0;
-	vector<int> max_vect{ m_maPointsS, m_maPointsM, m_maPointsL, m_slopePoints };
+	vector<int> max_vect{ m_maPointsS_long, m_maPointsM_long, m_maPointsL_long, m_maPointsS_short, m_maPointsM_short, m_maPointsL_short,  m_slopePoints };
 	int max_window_size= *max_element(max_vect.begin(), max_vect.end());
 
-	if (m_slopePoints > 1 && m_maPointsL > 1 && m_maPointsM > 1 &&  m_maPointsS > 1) {
+	if (m_maPointsS_long > 1 && m_maPointsM_long > 1 && m_maPointsL_long > 1 && m_maPointsS_short > 1 && m_maPointsM_short > 1 && m_maPointsL_short > 1 && m_slopePoints > 1) {
 
 		// Loop over the first part of the dataset
 		for (auto it = m_prices.begin(); it != m_prices.begin() + max_window_size; ++it) {
-			m_ma_small.push_back(0.0);
-			m_ma_medium.push_back(0.0);
-			m_ma_large.push_back(0.0);
+
+			m_ma_small_long.push_back(0.0);
+			m_ma_medium_long.push_back(0.0);
+			m_ma_large_long.push_back(0.0);
+			
+			m_ma_small_short.push_back(0.0);
+			m_ma_medium_short.push_back(0.0);
+			m_ma_large_short.push_back(0.0);
+
 			m_slope.push_back(0.0);
 
 			m_state_signal.push_back(0);
@@ -486,31 +523,34 @@ void WhiteRobot::whiteStrategy( double intialCash) {
 
 		// Loop over the tradable part of the dataset
 		for (auto it = m_prices.begin() + max_window_size; it != m_prices.end(); ++it) {
-			vector<double> window;
-			window = vector < double >(it - max_window_size +1, it+1);
-			vector<double> signals = generateSignals(window, m_maPointsS, m_maPointsM, m_maPointsL, m_slopePoints);
-			m_ma_small.push_back(signals[0]);
-			m_ma_medium.push_back(signals[1]);
-			m_ma_large.push_back(signals[2]);
-			m_slope.push_back(signals[3]);
+
+			vector<double> prices_window;
+			prices_window = vector < double >(it - max_window_size +1, it+1);
+			generateSignals(prices_window);
+
 			m_order_signal.push_back(whiteStateMachine(last_trade_investment));
+
 			m_portfolio_value.push_back(orderAnalyser(current_cash, last_trade_investment, cfd_units));
+
 			++m_point;
 		}
 	}
 	else
 	{
-		cout << " Window MA Small: " << m_maPointsS << endl;
-		cout << " Window MA Medium: " << m_maPointsM << endl;
-		cout << " Window MA Large: " << m_maPointsL << endl;
-		cout << " Window Slope: " << m_slopePoints << endl;
+
 		cout << " Strategy imposible to execute" << endl;
 
 		// Fill everythong with 0 to avoid memory acces errors
 		for (auto it = m_prices.begin(); it != m_prices.end(); ++it) {
-			m_ma_small.push_back(0.0);
-			m_ma_medium.push_back(0.0);
-			m_ma_large.push_back(0.0);
+
+			m_ma_small_long.push_back(0.0);
+			m_ma_medium_long.push_back(0.0);
+			m_ma_large_long.push_back(0.0);
+
+			m_ma_small_short.push_back(0.0);
+			m_ma_medium_short.push_back(0.0);
+			m_ma_large_short.push_back(0.0);
+
 			m_slope.push_back(0.0);
 
 			m_state_signal.push_back(0);
@@ -562,14 +602,24 @@ void WhiteRobot::printResults() {
 
 	cout << endl << "Simulation Parameters:" << endl << endl;
 
-	cout << "Small moving average points: " << m_maPointsS << endl;
-	cout << "Medium moving average point: " << m_maPointsM << endl;
-	cout << "Large moving average point: " << m_maPointsL << endl;
+	cout << "Long strategy parameters: " << endl;
+	cout << "Small moving average points: " << m_maPointsS_long << endl;
+	cout << "Medium moving average point: " << m_maPointsM_long << endl;
+	cout << "Large moving average point: " << m_maPointsL_long << endl;
+	cout << "Min slope: " << fixed << setprecision(4) << m_slopeMin_long << endl;
+	cout << "State machine mode for Long trades: " << m_mode_long << endl << endl;
+
+	cout << "Short strategy parameters: " << endl;
+	cout << "Small moving average points: " << m_maPointsS_short << endl;
+	cout << "Medium moving average point: " << m_maPointsM_short << endl;
+	cout << "Large moving average point: " << m_maPointsL_short << endl;
+	cout << "Min slope: " << fixed << setprecision(4) << m_slopeMin_short << endl;
+	cout << "State machine mode for short trades: " << m_mode_short << endl << endl;
+
+	cout << "General strategy parameters: " << endl;
 	cout << "Slope points: " << m_slopePoints << endl;
-	cout << "Min slope: " << fixed << setprecision(4) << m_slopeMin << endl;
 	cout << "Stop loss: " << fixed << setprecision(4) << m_stopLoss << endl;
-	cout << "State machine mode Up: " << m_modeUp << endl;
-	cout << "State machine mode Down: " << m_modeDown << endl;
+
 
 	cout << endl << "End of simulation Results." << endl << endl;
 	cout << endl << "****************************************************************************" << endl;
@@ -581,7 +631,8 @@ void WhiteRobot::saveSimulation(string fileName) {
 	ofstream file_out;
 
 	// File format:
-	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit,long_stop_loss, short_trades, good_short_trades, short_trades_profit, short_stop_loss, small_ma, medium_ma, large_ma, slope_points, min_slope, stop_loss, sm_mode_up, sm_mode_up
+	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit,long_stop_loss, short_trades, good_short_trades, short_trades_profit, short_stop_loss, small_ma_long, medium_ma_long, large_ma_long, min_slope_long, sm_mode_long, small_ma_short, medium_ma_short, large_ma_short, min_slope_short, sm_mode_short, slope_points, stop_loss
+
 
 	file_out.open(fileName, ios_base::app);
 
@@ -606,14 +657,20 @@ void WhiteRobot::saveSimulation(string fileName) {
 	file_out << fixed << setprecision(2) << m_short_trades_profit << ",";
 	file_out << m_short_stop_loss << ",";
 
-	file_out << m_maPointsS << ",";
-	file_out << m_maPointsM << ",";
-	file_out << m_maPointsL << ",";
+	file_out << m_maPointsS_long << ",";
+	file_out << m_maPointsM_long << ",";
+	file_out << m_maPointsL_long << ",";
+	file_out << fixed << setprecision(4) << m_slopeMin_long << ",";
+	file_out << m_mode_long << ",";
+
+	file_out << m_maPointsS_short << ",";
+	file_out << m_maPointsM_short << ",";
+	file_out << m_maPointsL_short << ",";
+	file_out << fixed << setprecision(4) << m_slopeMin_short << ",";
+	file_out << m_mode_short << ",";
+
 	file_out << m_slopePoints << ",";
-	file_out << fixed << setprecision(4) << m_slopeMin << ",";
-	file_out << fixed << setprecision(4) << m_stopLoss << ",";
-	file_out << m_modeUp << ",";
-	file_out << m_modeDown << endl;
+	file_out << fixed << setprecision(4) << m_stopLoss << endl;
 
 	//cout << endl << "Simulation results added to: "<< fileName << endl;
 
@@ -623,18 +680,50 @@ void WhiteRobot::saveSimulation(string fileName) {
 void WhiteRobot::saveSimulationData(string fileName) {
 
 	// Create an output filestream object
-	ofstream outFile(fileName);
+	ofstream file_out(fileName);
 
 	// write the file headers
-	outFile << "date" << "," << "price" << "," << "ma_small" << "," << "ma_medium" << "," << "ma_large" << "," << "ma_slope" << ","<<"state_signal"<<"," << "order_signal" << "," << "current_cash" << "," << "cfd_units" << "," << "portfolio_value" << "," << "last_trade_investment" << "," << "m_trade_profit" << " ," << "stop_loss" << endl;
+	file_out << "date" << ",";
+	file_out << "price" << ",";
+	file_out << "ma_small_long" << ",";
+	file_out << "ma_medium_long" << ",";
+	file_out << "ma_large_long" << ",";
+	file_out << "ma_small_short" << ",";
+	file_out << "ma_medium_short" << ",";
+	file_out << "ma_large_short" << ",";
+	file_out << "ma_slope" << ",";
+	file_out << "state_signal" << ",";
+	file_out << "order_signal" << ",";
+	file_out << "current_cash" << ",";
+	file_out << "cfd_units" << ",";
+	file_out << "portfolio_value" << ",";
+	file_out << "last_trade_investment" << ",";
+	file_out << "m_trade_profit" << " ,";
+	file_out << "stop_loss" << endl;
 
 
 	// write data to the file
 	for (int i = 0; i != m_prices.size(); i++) {
-		outFile << m_dates[i] << "," << m_prices[i] << "," << m_ma_small[i] << "," << m_ma_medium[i] << "," << m_ma_large[i] << "," << m_slope[i] << "," << m_state_signal[i] <<","<< m_order_signal[i] << ","<< m_current_cash[i] << "," << m_cfd_units[i] << "," << m_portfolio_value[i] << "," << m_last_trade_investment [i] << "," << m_trade_profit[i] << "," << m_stop_loss[i] <<endl;
+		file_out << m_dates[i] << ",";
+		file_out << m_prices[i] << ",";
+		file_out << m_ma_small_long[i] << ",";
+		file_out << m_ma_medium_long[i] << ",";
+		file_out << m_ma_large_long[i] << ",";
+		file_out << m_ma_small_short[i] << ",";
+		file_out << m_ma_medium_short[i] << ",";
+		file_out << m_ma_large_short[i] << ",";
+		file_out << m_slope[i] << ",";
+		file_out << m_state_signal[i] << ",";
+		file_out << m_order_signal[i] << ",";
+		file_out << m_current_cash[i] << ",";
+		file_out << m_cfd_units[i] << ",";
+		file_out << m_portfolio_value[i] << ",";
+		file_out << m_last_trade_investment[i] << ",";
+		file_out << m_trade_profit[i] << ",";
+		file_out << m_stop_loss[i] << endl;
 	}
 	// close the output file
-	outFile.close();
+	file_out.close();
 
 	cout << endl << "Simulation data saved into: "<< fileName << endl;
 }

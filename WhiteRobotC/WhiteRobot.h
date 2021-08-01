@@ -50,12 +50,13 @@ public:
 
 	WhiteRobot();
 
-	WhiteRobot(int maPointsS,	int maPointsM, int maPointsL, int slopePoints, double slopeMin,	double stopLoss, int modeUp, int modeDown);
+	WhiteRobot(int maPointsS_long,	int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints,	double stopLoss);
 
 
 	//Getters and setters
 
-	void setParameters(int maPointsS, int maPointsM, int maPointsL, int slopePoints, double slopeMin, double stopLoss, int modeUp, int modeDown);
+	void setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss);
+
 	vector<double> getPrices();
 	void printPrices();
 	string getTimeStr();
@@ -71,7 +72,7 @@ public:
 
 	double movingSlope(const vector<double> prices, int windowSize);
 
-	vector<double> generateSignals(vector<double> prices, int maPointsS, int maPointsM, int maPointsL, int slopePoints);
+	void generateSignals(vector<double> prices_window);
 
 	
 	int stateAnalyser(); 
@@ -99,22 +100,34 @@ private:
 
 	//private variable members
 
-	int m_maPointsS;
-	int m_maPointsM;
-	int m_maPointsL;
+	int m_maPointsS_long;
+	int m_maPointsM_long;
+	int m_maPointsL_long;
+	double m_slopeMin_long;
+	int m_mode_long;
+
+	int m_maPointsS_short;
+	int m_maPointsM_short;
+	int m_maPointsL_short;
+	double m_slopeMin_short;
+	int m_mode_short;
+
 	int m_slopePoints;
-	double m_slopeMin;
 	double m_stopLoss;
-	int m_modeUp;
-	int m_modeDown;
+
 
 	vector<string> m_dates;
 	vector<double> m_prices;
 	vector<double> m_volume;
 
-	vector<double> m_ma_small;
-	vector<double> m_ma_medium;
-	vector<double> m_ma_large;
+
+	vector<double> m_ma_small_long;
+	vector<double> m_ma_medium_long;
+	vector<double> m_ma_large_long;
+	vector<double> m_ma_small_short;
+	vector<double> m_ma_medium_short;
+	vector<double> m_ma_large_short;
+
 	vector<double> m_slope;
 
 	int m_point;
