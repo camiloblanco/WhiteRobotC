@@ -21,8 +21,6 @@ CMakeFiles/WhiteRobotC.dir/WhiteRobotC.cpp.o: ../WhiteRobot.h
 CMakeFiles/WhiteRobotC.dir/WhiteRobotC.cpp.o: ../WhiteRobotC.cpp
 CMakeFiles/WhiteRobotC.dir/WhiteRobotC.cpp.o: ../WhiteStrategy.h
 
-CMakeFiles/WhiteRobotC.dir/WhiteStrategy.cpp.o: ../Signal_Generator.h
-CMakeFiles/WhiteRobotC.dir/WhiteStrategy.cpp.o: ../WhiteRobot.h
 CMakeFiles/WhiteRobotC.dir/WhiteStrategy.cpp.o: ../WhiteStrategy.cpp
 CMakeFiles/WhiteRobotC.dir/WhiteStrategy.cpp.o: ../WhiteStrategy.h
 

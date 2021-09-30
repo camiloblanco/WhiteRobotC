@@ -12,6 +12,7 @@
 class Signal_Generator
 {
 public:
+    Signal_Generator();
     double movingAverage(std::vector<double> prices, int windowSize);
     double movingSlope(const std::vector<double> prices, int windowSize);
 };

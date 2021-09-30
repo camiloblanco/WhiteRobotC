@@ -25,8 +25,6 @@
 #include<stdlib.h>
 #include <random>
 #include "WhiteRobot.h"
-#include "WhiteStrategy.h"
-#include "Signal_Generator.h"
 using namespace std;
 
 /****************************************************************************************

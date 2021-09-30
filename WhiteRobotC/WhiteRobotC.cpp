@@ -27,7 +27,7 @@
 int main()
 
 {
-	WhiteStrategy ws;
-	ws.whiteStateMachine(1000);
+    RobotMenu menu;
+    menu.mainMenu();
 	return 0;
 }

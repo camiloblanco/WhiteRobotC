@@ -36,6 +36,7 @@
 #include <ctime>
 #include "Signal_Generator.h"
 #include "WhiteStrategy.h"
+
 using namespace std;
 
 /****************************************************************************************
@@ -147,5 +148,7 @@ private:
 
 	//Brain of the Robot
     WhiteStrategy ws;
+    //Signal Generator
+    Signal_Generator generate;
 };
 

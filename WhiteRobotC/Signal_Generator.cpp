@@ -4,6 +4,9 @@
 
 #include "Signal_Generator.h"
 
+
+Signal_Generator::Signal_Generator() {}
+
 // Simple moving average function
 double Signal_Generator::movingAverage(std::vector<double> prices, int windowSize)
 {
@@ -36,3 +39,5 @@ double Signal_Generator::movingSlope(const std::vector<double> prices, int windo
     const auto slope = (n * s_xy - s_x * s_y) / (n * s_xx - s_x * s_x);
     return slope;
 }
+
+

@@ -10,8 +10,8 @@ add_executable(WhiteRobotC
         RobotMenu.h
         Signal_Generator.cpp
         Signal_Generator.h
+        WhiteStrategy.cpp
+        WhiteStrategy.h
         WhiteRobot.cpp
         WhiteRobot.h
-        WhiteRobotC.cpp
-        WhiteStrategy.cpp
-        WhiteStrategy.h)
+        WhiteRobotC.cpp)

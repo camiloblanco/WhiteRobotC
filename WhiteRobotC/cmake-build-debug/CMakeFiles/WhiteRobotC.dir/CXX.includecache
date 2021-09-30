@@ -6,6 +6,10 @@
 
 #IncludeRegexTransform: 
 
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.cpp
+RobotMenu.h
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
+
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
 iostream
 -
@@ -17,10 +21,6 @@ random
 -
 WhiteRobot.h
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.h
-WhiteStrategy.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.h
-Signal_Generator.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Signal_Generator.h
 
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Signal_Generator.h
 vector
@@ -29,6 +29,10 @@ algorithm
 -
 numeric
 -
+
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.cpp
+WhiteRobot.h
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.h
 
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.h
 iostream
@@ -64,7 +68,11 @@ WhiteStrategy.h
 RobotMenu.h
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
 
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.cpp
+WhiteStrategy.h
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.h
-WhiteRobot.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.h
+
+/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.h
+vector
+-
 
