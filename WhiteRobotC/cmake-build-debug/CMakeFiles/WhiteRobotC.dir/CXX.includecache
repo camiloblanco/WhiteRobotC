@@ -6,22 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.cpp
-RobotMenu.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
-
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
-iostream
--
-string
--
-stdlib.h
--
-random
--
-WhiteRobot.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.h
-
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Signal_Generator.h
 vector
 -
@@ -61,14 +45,6 @@ ctime
 -
 Signal_Generator.h
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Signal_Generator.h
-WhiteStrategy.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.h
-
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobotC.cpp
-RobotMenu.h
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.h
-
-/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.cpp
 WhiteStrategy.h
 /Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteStrategy.h
 
