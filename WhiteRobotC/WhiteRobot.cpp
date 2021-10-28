@@ -201,13 +201,15 @@ void WhiteRobot::RunStrategy( double intialCash) {
         m_trade_profit.resize(max_window_size,0);
 
         m_stop_loss.resize(max_window_size,0);
+        m_point = max_window_size;
 
         // Loop over the tradable part of the dataset
         for (auto it = m_prices.begin() + max_window_size; it != m_prices.end(); ++it) {
             vector<double> prices_window;
             prices_window = vector<double>(it - max_window_size + 1, it + 1);
             generateSignals(prices_window);
-
+            if(m_point==403)
+            {std::cout<<"caught";}
             m_order_signal.push_back(ws.whiteStateMachine(last_trade_investment, m_state, m_slope, m_point, m_slopeMin_long,
                                                           m_mode_long, m_ma_small_long, m_ma_medium_long, m_ma_large_long,
                                                           m_slopeMin_short, m_ma_small_short, m_ma_medium_short,
@@ -218,7 +220,6 @@ void WhiteRobot::RunStrategy( double intialCash) {
                      m_point, m_prices, m_long_trades, m_short_trades, m_long_trades_profit,
                      m_trade_profit, m_good_long_trades, m_short_trades_profit, m_good_short_trades,
                      m_current_cash, m_cfd_units, m_last_trade_investment));
-
             ++m_point;
         }
     } else {
