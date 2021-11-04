@@ -264,30 +264,27 @@ void WhiteRobot::RunStrategy( double intialCash) {
         cout << " Strategy Impossible to execute" << endl;
 
         // Fill everythong with 0 to avoid memory acces errors
-        for (auto it = m_prices.begin(); it != m_prices.end(); ++it) {
+        m_ma_small_long.resize(max_window_size, 0);
+        m_ma_medium_long.resize(max_window_size,0);
+        m_ma_large_long.resize(max_window_size,0);
 
-            m_ma_small_long.push_back(0.0);
-            m_ma_medium_long.push_back(0.0);
-            m_ma_large_long.push_back(0.0);
+        m_ma_small_short.resize(max_window_size,0);
+        m_ma_medium_short.resize(max_window_size,0);
+        m_ma_large_short.resize(max_window_size,0);
 
-            m_ma_small_short.push_back(0.0);
-            m_ma_medium_short.push_back(0.0);
-            m_ma_large_short.push_back(0.0);
+        m_slope.resize(max_window_size,0);
 
-            m_slope.push_back(0.0);
+        m_state_signal.resize(max_window_size,0);
+        m_order_signal.resize(max_window_size,0);
 
-            m_state_signal.push_back(0);
-            m_order_signal.push_back(0);
+        m_current_cash.resize(max_window_size,intialCash);
+        m_cfd_units.resize(max_window_size,0);
+        m_last_trade_investment.resize(max_window_size,0);
+        m_portfolio_value.resize(max_window_size,intialCash);
+        m_trade_profit.resize(max_window_size,0);
 
-            m_current_cash.push_back(intialCash);
-            m_cfd_units.push_back(0.0);
-            m_last_trade_investment.push_back(0.0);
-            m_portfolio_value.push_back(intialCash);
-            m_trade_profit.push_back(0.0);
-
-            m_stop_loss.push_back(0);
-
-            ++m_point;
+        m_stop_loss.resize(max_window_size,0);
+        m_point = max_window_size;
         }
     }
 }
