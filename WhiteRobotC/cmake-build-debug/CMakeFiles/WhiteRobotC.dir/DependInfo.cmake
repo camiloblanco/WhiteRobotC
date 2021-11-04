@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Date.cpp" "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/cmake-build-debug/CMakeFiles/WhiteRobotC.dir/Date.cpp.o"
   "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/RobotMenu.cpp" "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/cmake-build-debug/CMakeFiles/WhiteRobotC.dir/RobotMenu.cpp.o"
   "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/Signal_Generator.cpp" "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/cmake-build-debug/CMakeFiles/WhiteRobotC.dir/Signal_Generator.cpp.o"
   "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/WhiteRobot.cpp" "/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/cmake-build-debug/CMakeFiles/WhiteRobotC.dir/WhiteRobot.cpp.o"

@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/WhiteRobotC.dir/Date.cpp.o"
   "CMakeFiles/WhiteRobotC.dir/RobotMenu.cpp.o"
   "CMakeFiles/WhiteRobotC.dir/Signal_Generator.cpp.o"
   "CMakeFiles/WhiteRobotC.dir/WhiteRobot.cpp.o"

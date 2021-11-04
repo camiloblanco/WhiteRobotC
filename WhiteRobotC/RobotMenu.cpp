@@ -69,7 +69,8 @@ void RobotMenu::executeWhite () {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss, intialCash;
+	double stopLoss, initialCash;
+	string StartDate, EndDate;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -85,7 +86,7 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM_long;
 	cout << " - Large window points size (Example:40): " << endl;
 	cin >> maPointsL_long;
-	cout << " - Minimun slope to establish a trend (Example:0.01): " << endl;
+	cout << " - Minimum slope to establish a trend (Example:0.01): " << endl;
 	cin >> slopeMin_long;
 	cout << "- Logic Mode for Long trades [0-7]: " << endl;
 	cin >> mode_long;
@@ -97,26 +98,37 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM_short;
 	cout << " - Large window points size (Example:40): " << endl;
 	cin >> maPointsL_short;
-	cout << " - Minimun slope to establish a trend (Example:0.01): " << endl;
+	cout << " - Minimum slope to establish a trend (Example:0.01): " << endl;
 	cin >> slopeMin_short;
 	cout << "- Logic Mode for Short trades [0-7]: " << endl;
 	cin >> mode_short;
 
-	cout << endl << "General Strategy parametes: " << endl;
+	cout << endl << "General Strategy parameters: " << endl;
 	cout << "- Number of points to use for calculating the Slope (Example:300)" << endl;
 	cin >> slopePoints;
 	cout << "- Stop-loss parameter (Example:0.05): " << endl;
 	cin >> stopLoss;
 
+	cout <<endl<<" Date Parameters:";
+    cout<<endl<< "Enter Starting Date (YYYY-MM-DD HH::MM) or N/A "<<endl;
+    getline(cin>>ws,StartDate);
+    cout<<"Enter End Date (YYYY-MM-DD HH::MM) or N/A"<<endl;
+    getline(cin>>ws,EndDate);
+
 
 	cout << "Please enter the initial cash investment (Example:1000) " << endl;
-	cin >> intialCash;
+	cin >> initialCash;
 	
 
 	WhiteRobot robot(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-
-	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
-	robot.RunStrategy(intialCash);
+    if(StartDate != "N/A" || EndDate != "N/A")
+    {
+        robot.loadSelectedData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv",StartDate,EndDate);
+    }
+    else {
+        robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+    }
+	robot.RunStrategy(initialCash);
 	robot.printResults();
 	robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
 	robot.saveSimulationData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/portfolio_simulation.csv");
@@ -151,7 +163,7 @@ void RobotMenu::randomWhite() {
 	cin >> max_maPointsM_long;
 	cout << " - Large window maximum points size (Example:60): " << endl;
 	cin >> max_maPointsL_long;
-	cout << " - Maximun slope to establish a trend (Example:0.1): " << endl;
+	cout << " - Maximum slope to establish a trend (Example:0.1): " << endl;
 	cin >> max_slopeMin_long;
 	
 
@@ -162,18 +174,18 @@ void RobotMenu::randomWhite() {
 	cin >> max_maPointsM_short;
 	cout << " - Large window maximum points size (Example:60): " << endl;
 	cin >> max_maPointsL_short;
-	cout << " - Maximun slope to establish a trend (Example:0.1): " << endl;
+	cout << " - Maximum slope to establish a trend (Example:0.1): " << endl;
 	cin >> max_slopeMin_short;
 	
 
-	cout << endl << "General Strategy parametes: " << endl;
+	cout << endl << "General Strategy parameters: " << endl;
 	cout << "- Maximum number of points to use for calculating the Slope (Example:500)" << endl;
 	cin >> max_slopePoints;
 	cout << "- Maximum Stop-loss parameter (Example:0.1): " << endl;
 	cin >> max_stopLoss;
 	cout << "- Number of simulations to execute: " << endl;
 	cin >> testNumber;
-	cout << "- All simulations are done with an initial invesment of 1000 " << endl << endl;
+	cout << "- All simulations are done with an initial investment of 1000 " << endl << endl;
 	
 	int maPointsS_long, maPointsM_long, maPointsL_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, mode_short;
 	double slopeMin_long, slopeMin_short;

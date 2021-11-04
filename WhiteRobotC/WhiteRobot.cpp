@@ -120,7 +120,6 @@ vector<string> WhiteRobot::tokenize(string& str, char delim) {
 
 // Load the index data from CSV file
 void WhiteRobot::loadData(string fileName) {
-
 	string line;
 	ifstream myStream(fileName);
 	if (myStream.is_open()) {
@@ -148,6 +147,44 @@ void WhiteRobot::loadData(string fileName) {
 		cout << "There was a problem opening the file: " << fileName << endl;
 	}
 }
+
+//Load Data based on Time Constraints
+void WhiteRobot:: loadSelectedData(string fileName, string from, string to) {
+    string line;
+
+    ifstream myStream(fileName);
+    if (myStream.is_open()) {
+        cout << endl << " " << fileName << " successfully opened." << line << endl;
+        getline(myStream, line);
+        cout << "The first line is: " << line << endl;
+
+
+        while (getline(myStream, line)) {
+
+            //Parses the line
+            vector<string> fields = tokenize(line, ',');
+            Date d(fields[0]);
+            string time = (d.reformat_date());
+            double price = stod(fields[1]);
+            if (time == to)
+            {
+                break;
+            }
+            else if (time >= from) {
+                // Stores the read values
+                if (price > 0) {
+                    m_dates.push_back(fields[0]);
+                    m_prices.push_back(price);
+                }
+            }
+
+        }
+        myStream.close();
+    } else {
+        cout << "There was a problem opening the file: " << fileName << endl;
+    }
+}
+
 
 
 // Signal generator function

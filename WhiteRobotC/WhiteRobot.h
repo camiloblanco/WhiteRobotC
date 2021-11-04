@@ -31,12 +31,13 @@
 #include <fstream>
 #include <vector> 
 #include <numeric>
+#include <chrono>
 #include <algorithm>
 #include <chrono>
 #include <ctime>
 #include "Signal_Generator.h"
 #include "WhiteStrategy.h"
-
+#include "Date.h"
 using namespace std;
 
 /****************************************************************************************
@@ -76,6 +77,8 @@ public:
 	vector<string>  tokenize(string& str, char delim);
 
 	void loadData(string fileName);
+
+	void loadSelectedData(string fileName, string from, string to);
 
 	void generateSignals(vector<double> prices_window);
 
