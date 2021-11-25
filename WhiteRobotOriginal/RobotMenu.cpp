@@ -53,7 +53,7 @@ void RobotMenu::readLine(string& description) {
 // Test if the data file is correct and display content
 void RobotMenu::testData() {
 	WhiteRobot robot;
-	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/index_data.csv");
 	clearConsole();
 	cout << "****************************************************************************" << endl;
 	cout << "			Test and print the data from the CSV File " << endl;
@@ -69,8 +69,7 @@ void RobotMenu::executeWhite () {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss, initialCash;
-	string StartDate, EndDate;
+	double stopLoss, intialCash;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -86,7 +85,7 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM_long;
 	cout << " - Large window points size (Example:40): " << endl;
 	cin >> maPointsL_long;
-	cout << " - Minimum slope to establish a trend (Example:0.01): " << endl;
+	cout << " - Minimun slope to establish a trend (Example:0.01): " << endl;
 	cin >> slopeMin_long;
 	cout << "- Logic Mode for Long trades [0-7]: " << endl;
 	cin >> mode_long;
@@ -98,40 +97,29 @@ void RobotMenu::executeWhite () {
 	cin >> maPointsM_short;
 	cout << " - Large window points size (Example:40): " << endl;
 	cin >> maPointsL_short;
-	cout << " - Minimum slope to establish a trend (Example:0.01): " << endl;
+	cout << " - Minimun slope to establish a trend (Example:0.01): " << endl;
 	cin >> slopeMin_short;
 	cout << "- Logic Mode for Short trades [0-7]: " << endl;
 	cin >> mode_short;
 
-	cout << endl << "General Strategy parameters: " << endl;
+	cout << endl << "General Strategy parametes: " << endl;
 	cout << "- Number of points to use for calculating the Slope (Example:300)" << endl;
 	cin >> slopePoints;
 	cout << "- Stop-loss parameter (Example:0.05): " << endl;
 	cin >> stopLoss;
 
-	cout <<endl<<" Date Parameters:";
-    cout<<endl<< "Enter Starting Date (YYYY-MM-DD HH::MM) or N/A "<<endl;
-    getline(cin>>ws,StartDate);
-    cout<<"Enter End Date (YYYY-MM-DD HH::MM) or N/A"<<endl;
-    getline(cin>>ws,EndDate);
 
-
-	cout << "Please enter the initial cash investment (Example:1000) " << endl;
-	cin >> initialCash;
+	cout << "Please enter the initial cash invesment (Example:1000) " << endl;
+	cin >> intialCash;
 	
 
 	WhiteRobot robot(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-    if(StartDate != "N/A" || EndDate != "N/A")
-    {
-        robot.loadSelectedData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv",StartDate,EndDate);
-    }
-    else {
-        robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
-    }
-	robot.RunStrategy(initialCash);
+
+	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/index_data.csv");
+	robot.whiteStrategy(intialCash);
 	robot.printResults();
-	robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
-	robot.saveSimulationData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/portfolio_simulation.csv");
+	robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/simulations.csv");
+	robot.saveSimulationData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/portfolio_simulation1.csv");
 
 	menuPause();
 }
@@ -139,7 +127,7 @@ void RobotMenu::executeWhite () {
 
 
 // Execute a series of random White Robots
-void RobotMenu::randomWhite() {
+void RobotMenu::radomWhite() {
 
 	int max_maPointsS_long, max_maPointsM_long, max_maPointsL_long, max_maPointsS_short, max_maPointsM_short, max_maPointsL_short;
 	double max_slopeMin_long, max_slopeMin_short;
@@ -163,7 +151,7 @@ void RobotMenu::randomWhite() {
 	cin >> max_maPointsM_long;
 	cout << " - Large window maximum points size (Example:60): " << endl;
 	cin >> max_maPointsL_long;
-	cout << " - Maximum slope to establish a trend (Example:0.1): " << endl;
+	cout << " - Maximun slope to establish a trend (Example:0.1): " << endl;
 	cin >> max_slopeMin_long;
 	
 
@@ -174,18 +162,18 @@ void RobotMenu::randomWhite() {
 	cin >> max_maPointsM_short;
 	cout << " - Large window maximum points size (Example:60): " << endl;
 	cin >> max_maPointsL_short;
-	cout << " - Maximum slope to establish a trend (Example:0.1): " << endl;
+	cout << " - Maximun slope to establish a trend (Example:0.1): " << endl;
 	cin >> max_slopeMin_short;
 	
 
-	cout << endl << "General Strategy parameters: " << endl;
+	cout << endl << "General Strategy parametes: " << endl;
 	cout << "- Maximum number of points to use for calculating the Slope (Example:500)" << endl;
 	cin >> max_slopePoints;
 	cout << "- Maximum Stop-loss parameter (Example:0.1): " << endl;
 	cin >> max_stopLoss;
 	cout << "- Number of simulations to execute: " << endl;
 	cin >> testNumber;
-	cout << "- All simulations are done with an initial investment of 1000 " << endl << endl;
+	cout << "- All simulations are done with an initial invesment of 1000 " << endl << endl;
 	
 	int maPointsS_long, maPointsM_long, maPointsL_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, mode_short;
 	double slopeMin_long, slopeMin_short;
@@ -211,7 +199,7 @@ void RobotMenu::randomWhite() {
 	uniform_real_distribution<double> generator_stopLoss(0, max_stopLoss);
 
 	WhiteRobot robot;
-	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/index_data.csv");
 
 	for (int i = 0; i < testNumber; i++)
 	{
@@ -231,8 +219,8 @@ void RobotMenu::randomWhite() {
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
 		
 		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
-		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
+		robot.whiteStrategy(intialCash);
+		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {
 			cout << "Simulation number: " << i+1 <<endl;
@@ -245,7 +233,7 @@ void RobotMenu::randomWhite() {
 
 
 // Execute a series of random White Robots with parameters in closed intervals
-void RobotMenu::closedRandomWhite() {
+void RobotMenu::closedRadomWhite() {
 
 	int min_maPointsS_long, min_maPointsM_long, min_maPointsL_long, min_maPointsS_short, min_maPointsM_short, min_maPointsL_short;
 	int max_maPointsS_long, max_maPointsM_long, max_maPointsL_long, max_maPointsS_short, max_maPointsM_short, max_maPointsL_short;
@@ -300,7 +288,7 @@ void RobotMenu::closedRandomWhite() {
 	cout << "- Maximum slope to establish a trend (Example:0.05): " << endl;
 	cin >> max_slopeMin_short;
 
-	cout << endl << "General Strategy parameters: " << endl;
+	cout << endl << "General Strategy parametes: " << endl;
 	cout << "- Minimum number of points to use for calculating the Slope (Example:50): " << endl;
 	cin >> min_slopePoints;
 	cout << "- Maximum number of points to use for calculating the Slope (Example:500): " << endl;
@@ -337,7 +325,7 @@ void RobotMenu::closedRandomWhite() {
 	uniform_real_distribution<double> generator_stopLoss(min_stopLoss, max_stopLoss);
 
 	WhiteRobot robot;
-	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/index_data.csv");
 
 	for (int i = 0; i < testNumber; i++)
 	{
@@ -357,8 +345,8 @@ void RobotMenu::closedRandomWhite() {
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
 
 		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
-		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
+		robot.whiteStrategy(intialCash);
+		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {
 			cout << "Simulation number: " << i + 1 << endl;
@@ -371,7 +359,7 @@ void RobotMenu::closedRandomWhite() {
 
 
 // Execute a series of random White Robots with parameters in closed intervals and Fixed state machine
-void RobotMenu::FixedBrainRandomWhite() {
+void RobotMenu::FixedBrainRadomWhite() {
 
 	int min_maPointsS_long, min_maPointsM_long, min_maPointsL_long, min_maPointsS_short, min_maPointsM_short, min_maPointsL_short, mode_long;
 	int max_maPointsS_long, max_maPointsM_long, max_maPointsL_long, max_maPointsS_short, max_maPointsM_short, max_maPointsL_short, mode_short;
@@ -430,7 +418,7 @@ void RobotMenu::FixedBrainRandomWhite() {
 	cout << "- Logic Mode for Short trades [0-7]: " << endl;
 	cin >> mode_short;
 
-	cout << endl << "General Strategy parameters: " << endl;
+	cout << endl << "General Strategy parametes: " << endl;
 	cout << "- Minimum number of points to use for calculating the Slope (Example:50): " << endl;
 	cin >> min_slopePoints;
 	cout << "- Maximum number of points to use for calculating the Slope (Example:500): " << endl;
@@ -466,7 +454,7 @@ void RobotMenu::FixedBrainRandomWhite() {
 	uniform_real_distribution<double> generator_stopLoss(min_stopLoss, max_stopLoss);
 
 	WhiteRobot robot;
-	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/index_data.csv");
 
 	for (int i = 0; i < testNumber; i++)
 	{
@@ -485,8 +473,8 @@ void RobotMenu::FixedBrainRandomWhite() {
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
 
 		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
-		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
+		robot.whiteStrategy(intialCash);
+		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotOriginal/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {
 			cout << "Simulation number: " << i + 1 << endl;
@@ -497,7 +485,7 @@ void RobotMenu::FixedBrainRandomWhite() {
 
 }
 
-//Main menu for accessing White Robot program
+//Main menu for accesing White Robot program 
 void RobotMenu::mainMenu() {
 
 	int option = 9;
@@ -505,7 +493,7 @@ void RobotMenu::mainMenu() {
 	while (option != 0) {
 		clearConsole();
 		cout << "****************************************************************************" << endl;
-		cout << "	White Robot an algorithmic trading backtesting program written in C++ " << endl << endl;
+		cout << "	White Robot an algorimic trading backtesting program written in C++ " << endl << endl;
 		cout << "		Version 3.0: Random generators + flexible dual brain " << endl << endl;
 		cout << "Select an option by entering the given number:" << endl << endl;
 		cout << "1. Test and print the data from the CSV File" << endl;
@@ -524,13 +512,13 @@ void RobotMenu::mainMenu() {
 			executeWhite();
 		}
 		else if (option == 3) {
-			randomWhite();
+			radomWhite();
 		}
 		else if (option == 4) {
-			closedRandomWhite();
+			closedRadomWhite();
 		}
 		else if (option == 5) {
-			FixedBrainRandomWhite();
+			FixedBrainRadomWhite();
 		}
 		else if (option == 0) {
 			cout << endl << "Thank you for using the White Robot, have a nice day. " << endl << endl;

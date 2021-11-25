@@ -1,6 +1,6 @@
 /****************************************************************************************
 * Project		:	AlgoTrading Jorge, David, Camilo, Shanka
-* File			:	RobotMenu.h
+* File			:	main.cpp
 * Lenguaje		:	C++
 * License		:	Apache License Ver 2.0, www.apache.org/licenses/LICENSE-2.0
 * Description	:	main CPP file for the program, entry point.
@@ -11,43 +11,24 @@
 *					  Cambridge, 2012, code: http://www.cambridge.org/9780521177160
 * Other files	:
 * Git Control	:	https://github.com/camiloblanco/WhiteRobotC
-* Author - Year	:	Sahenjit Paul - Camilo Blanco Vargas - Year: 2021
-* Mail - Web	:	shanks.p.95@gmail.com -:mail@camiloblanco.com
+* Author - Year	:	Sahenjit Paul - Camilo Blanco Vargas - Year: 2021 
+* Mail - Web	:	shanks.p.95@gmail.com -:mail@camiloblanco.com 
 ****************************************************************************************/
+
 
 /****************************************************************************************
-*							#GUARDS #INCLUDES AND #CONSTANTS							*
+*								#INCLUDES AND #CONSTANTS								*
 ****************************************************************************************/
-#pragma once
-
-#include<iostream>
-#include<string>
-#include<stdlib.h>
-#include <random>
-#include "WhiteRobot.h"
-using namespace std;
+#include "RobotMenu.h"
 
 /****************************************************************************************
-*									CLASS DECLARATION									*
+*									APPLICATION MAIN									*
 ****************************************************************************************/
-class RobotMenu
+
+int main()
+
 {
-public:
-	//constructors
-	RobotMenu();
-
-	// Console manipulation member functions
-	void clearConsole();
-	void menuPause();
-	void readLine(string& description);
-
-	//public member functions
-	void testData();
-	void executeWhite();
-	void randomWhite();
-	void closedRandomWhite();
-	void FixedBrainRandomWhite();
-	void mainMenu();
-	
-};
-
+	RobotMenu menu;
+	menu.mainMenu();
+	return 0;
+}
