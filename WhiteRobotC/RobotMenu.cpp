@@ -69,7 +69,7 @@ void RobotMenu::executeWhite () {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss, initialCash;
+	double stopLoss, initialCash, trailstopLoss;
 	string StartDate, EndDate;
 
 	clearConsole();
@@ -108,6 +108,8 @@ void RobotMenu::executeWhite () {
 	cin >> slopePoints;
 	cout << "- Stop-loss parameter (Example:0.05): " << endl;
 	cin >> stopLoss;
+	cout << "- Trial Stop-loss parameter (Example 0.05)" <<endl;
+	cin >> trailstopLoss;
 
 	cout <<endl<<" Date Parameters:";
     cout<<endl<< "Enter Starting Date (YYYY-MM-DD HH::MM) or N/A "<<endl;
@@ -120,7 +122,7 @@ void RobotMenu::executeWhite () {
 	cin >> initialCash;
 	
 
-	WhiteRobot robot(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
+	WhiteRobot robot(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss, trailstopLoss);
     if(StartDate != "N/A" || EndDate != "N/A")
     {
         robot.loadSelectedData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv",StartDate,EndDate);
@@ -145,9 +147,9 @@ void RobotMenu::randomWhite() {
 	double max_slopeMin_long, max_slopeMin_short;
 
 	int max_slopePoints, testNumber;
-	double max_stopLoss;
+	double max_stopLoss, max_trailstopLoss;
 
-	double intialCash = 1000;
+	double initialCash = 1000;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -183,6 +185,8 @@ void RobotMenu::randomWhite() {
 	cin >> max_slopePoints;
 	cout << "- Maximum Stop-loss parameter (Example:0.1): " << endl;
 	cin >> max_stopLoss;
+	cout << "- Maximum Trialing Stop-loss parameter (Example: 0.1): "<<endl;
+	cin >>max_trailstopLoss;
 	cout << "- Number of simulations to execute: " << endl;
 	cin >> testNumber;
 	cout << "- All simulations are done with an initial investment of 1000 " << endl << endl;
@@ -191,7 +195,7 @@ void RobotMenu::randomWhite() {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss;
+	double stopLoss, trail_stopLoss;
 
 	random_device rd;     // only used once to initialise (seed) engine
 	mt19937 rng(rd());    // random-number engine used (Mersenne-Twister)
@@ -209,6 +213,7 @@ void RobotMenu::randomWhite() {
 	uniform_int_distribution<int> generator_mode(0,7);
 	uniform_int_distribution<int> generator_slopePoints(2, max_slopePoints);
 	uniform_real_distribution<double> generator_stopLoss(0, max_stopLoss);
+    uniform_real_distribution<double> generator_trialstopLoss(0, max_trailstopLoss);
 
 	WhiteRobot robot;
 	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
@@ -229,9 +234,10 @@ void RobotMenu::randomWhite() {
 
 		slopePoints = generator_slopePoints(rng);
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
+        trail_stopLoss = floor((generator_trialstopLoss(rng) * 10000) + .5) / 10000;
 		
-		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
+		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss, trail_stopLoss);
+		robot.RunStrategy(initialCash);
 		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {
@@ -254,8 +260,9 @@ void RobotMenu::closedRandomWhite() {
 
 	int min_slopePoints, max_slopePoints, testNumber;
 	double min_stopLoss, max_stopLoss;
+	double min_trailstopLoss, max_trailstopLoss;
 
-	double intialCash = 1000;
+	double initialCash = 1000;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -309,6 +316,10 @@ void RobotMenu::closedRandomWhite() {
 	cin >> min_stopLoss;
 	cout << "- Maximum Stop-loss parameter (Example:0.05): " << endl;
 	cin >> max_stopLoss;
+	cout << "-Minimum Trailing Stop-loss parameter (Example:0.01): "<<endl;
+	cin >> min_trailstopLoss;
+	cout << "-Maximum Trailing Stop-loss parameter (Example:0.01): "<<endl;
+	cin >> max_trailstopLoss;
 	cout << "- Number of simulations to execute: " << endl;
 	cin >> testNumber;
 	cout << "All simulations are done with an initial cash of 1000 " << endl;
@@ -317,7 +328,7 @@ void RobotMenu::closedRandomWhite() {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss;
+	double stopLoss, trail_stopLoss;
 
 	random_device rd;     // only used once to initialise (seed) engine
 	mt19937 rng(rd());    // random-number engine used (Mersenne-Twister)
@@ -335,6 +346,7 @@ void RobotMenu::closedRandomWhite() {
 	uniform_int_distribution<int> generator_mode(0, 7);
 	uniform_int_distribution<int> generator_slopePoints(min_slopePoints, max_slopePoints);
 	uniform_real_distribution<double> generator_stopLoss(min_stopLoss, max_stopLoss);
+    uniform_real_distribution<double> generator_trailstopLoss(min_trailstopLoss, max_trailstopLoss);
 
 	WhiteRobot robot;
 	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
@@ -355,9 +367,10 @@ void RobotMenu::closedRandomWhite() {
 
 		slopePoints = generator_slopePoints(rng);
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
+        trail_stopLoss = floor((generator_trailstopLoss(rng) * 10000) + .5) / 10000;
 
-		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
+		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss, trail_stopLoss);
+		robot.RunStrategy(initialCash);
 		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {
@@ -379,9 +392,9 @@ void RobotMenu::FixedBrainRandomWhite() {
 	double max_slopeMin_long, max_slopeMin_short;
 
 	int min_slopePoints, max_slopePoints, testNumber;
-	double min_stopLoss, max_stopLoss;
+	double min_stopLoss, max_stopLoss, min_trail_stop_loss, max_trail_stop_loss;
 
-	double intialCash = 1000;
+	double initialCash = 1000;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -440,6 +453,10 @@ void RobotMenu::FixedBrainRandomWhite() {
 	cout << "- Maximum Stop-loss parameter (Example:0.05): " << endl;
 	cin >> max_stopLoss;
 	cout << "- Number of simulations to execute: " << endl;
+	cin >> min_trail_stop_loss;
+	cout << "- Minimum trail Stop-loss parameter (Example:0.05): " << endl;
+	cin >> max_trail_stop_loss;
+	cout << "- Maximum trail Stop-loss parameter (Example:0.05): " << endl;
 	cin >> testNumber;
 	cout << "- All simulations are done with an initial cash of 1000 " << endl;
 
@@ -447,7 +464,7 @@ void RobotMenu::FixedBrainRandomWhite() {
 	double slopeMin_long, slopeMin_short;
 
 	int slopePoints;
-	double stopLoss;
+	double stopLoss, trail_stopLoss;
 
 	random_device rd;     // only used once to initialise (seed) engine
 	mt19937 rng(rd());    // random-number engine used (Mersenne-Twister)
@@ -464,6 +481,7 @@ void RobotMenu::FixedBrainRandomWhite() {
 
 	uniform_int_distribution<int> generator_slopePoints(min_slopePoints, max_slopePoints);
 	uniform_real_distribution<double> generator_stopLoss(min_stopLoss, max_stopLoss);
+	uniform_real_distribution<double> generator_trail_stopLoss(min_trail_stop_loss, max_trail_stop_loss);
 
 	WhiteRobot robot;
 	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
@@ -483,9 +501,10 @@ void RobotMenu::FixedBrainRandomWhite() {
 
 		slopePoints = generator_slopePoints(rng);
 		stopLoss = floor((generator_stopLoss(rng) * 10000) + .5) / 10000;
+        trail_stopLoss = floor((generator_trail_stopLoss(rng) * 10000) + .5) / 10000;
 
-		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss);
-		robot.RunStrategy(intialCash);
+		robot.setParameters(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss, trail_stopLoss);
+		robot.RunStrategy(initialCash);
 		robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
 
 		if ((i + 1) % 100 == 0) {

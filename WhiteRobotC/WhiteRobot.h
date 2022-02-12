@@ -55,15 +55,15 @@ public:
 	m_slopePoints(4), m_stopLoss(0.1), m_point(0), m_state(1), m_long_stop_loss(0), m_short_stop_loss(0), m_long_trades(0), m_short_trades(0), m_good_long_trades(0), m_good_short_trades(0), m_long_trades_profit(0),
 	m_short_trades_profit(0) {}
 
-	WhiteRobot(int maPointsS_long,	int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints,	double stopLoss):
+	WhiteRobot(int maPointsS_long,	int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints,	double stopLoss, double trial_stopLoss):
 	m_maPointsS_long(maPointsS_long), m_maPointsM_long(maPointsM_long), m_maPointsL_long(maPointsL_long), m_slopeMin_long(slopeMin_long), m_mode_long(mode_long), m_maPointsS_short(maPointsS_short), m_maPointsM_short(maPointsM_short),
-	m_maPointsL_short(maPointsL_short), m_slopeMin_short(slopeMin_short), m_mode_short(mode_short), m_slopePoints(slopePoints), m_stopLoss(stopLoss), m_point(0), m_state(1), m_long_stop_loss(0), m_short_stop_loss(0), m_long_trades(0),
+	m_maPointsL_short(maPointsL_short), m_slopeMin_short(slopeMin_short), m_mode_short(mode_short), m_slopePoints(slopePoints), m_stopLoss(stopLoss), m_trail_stopLoss(trial_stopLoss), m_point(0), m_state(1), m_long_stop_loss(0), m_short_stop_loss(0), m_long_trades(0),
 	m_short_trades(0), m_good_long_trades(0), m_good_short_trades(0), m_long_trades_profit(0), m_short_trades_profit(0) {}
 
 
 	//Getters and setters
 
-	void setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss);
+	void setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss, double trial_stopLoss);
 
 	vector<double> getPrices();
 
@@ -82,7 +82,7 @@ public:
 
 	void generateSignals(vector<double> prices_window);
 
-	void RunStrategy(double intialCash);
+	void RunStrategy(double initialCash);
 
 	void printResults();
 	
@@ -111,6 +111,7 @@ private:
 
 	int m_slopePoints; //No. of Slope Points
 	double m_stopLoss; // Stop Loss
+	double m_trail_stopLoss; // Trailing Stop Loss
 
 
 	vector<string> m_dates; // Contains all the asset class dates
@@ -130,7 +131,9 @@ private:
 	int m_point; // Keeps track of the points
 	int m_state; // Keeps track of the current state of the state machine
 	int m_long_stop_loss; // Stores the long stop loss
+	int m_long_trail_stop_loss; //Stores the long trial stop loss
 	int m_short_stop_loss; // Stores the short stop loss
+	int m_short_trail_stop_loss; //Stores the short trial stop loss
 
 	int m_long_trades; //Stores the No. of Long trades
 	int m_short_trades; //Stores the No. of short trades
@@ -148,6 +151,7 @@ private:
 	vector<double> m_portfolio_value; // Keeps a track of the portfolio movement with respect to time
 	vector<double> m_trade_profit; // Keeps a track of the PNL with respect to time
 	vector<int> m_stop_loss; // Stores the stop loss values
+	vector<int> m_trail_stop_loss; //Stores the trialing stop loss values
 
 	//Brain of the Robot
     WhiteStrategy ws;

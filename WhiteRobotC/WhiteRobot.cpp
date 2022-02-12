@@ -41,7 +41,7 @@ void WhiteRobot::printPrices() {
     }
 }
 
-void WhiteRobot::setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss) {
+void WhiteRobot::setParameters(int maPointsS_long, int maPointsM_long, int maPointsL_long, double slopeMin_long, int mode_long, int maPointsS_short, int maPointsM_short, int maPointsL_short, double slopeMin_short, int mode_short, int slopePoints, double stopLoss, double trailstopLoss) {
 	
 	m_maPointsS_long = maPointsS_long;
 	m_maPointsM_long = maPointsM_long;
@@ -57,6 +57,7 @@ void WhiteRobot::setParameters(int maPointsS_long, int maPointsM_long, int maPoi
 
 	m_slopePoints = slopePoints;
 	m_stopLoss = stopLoss;
+	m_trail_stopLoss = trailstopLoss;
 
 	m_point = 0;
 	m_state = 1;
@@ -89,6 +90,7 @@ void WhiteRobot::setParameters(int maPointsS_long, int maPointsM_long, int maPoi
 	m_portfolio_value.clear();
 	m_trade_profit.clear();
 	m_stop_loss.clear();
+	m_trail_stop_loss.clear();
 }
 
 
@@ -204,12 +206,13 @@ void WhiteRobot::generateSignals(vector<double> prices_window) {
 
 
 // White strategy backtest implementation
-void WhiteRobot::RunStrategy( double intialCash) {
+void WhiteRobot::RunStrategy( double initialCash) {
     //cout << "Executing White strategy" << endl;
 
-    double current_cash = intialCash;
+    double current_cash = initialCash;
     double last_trade_investment = 1;
     double cfd_units = 0;
+    double max_portfolio_val = 0;
     vector<int> max_vect{m_maPointsS_long, m_maPointsM_long, m_maPointsL_long, m_maPointsS_short, m_maPointsM_short,
                          m_maPointsL_short, m_slopePoints};
     int max_window_size = *max_element(max_vect.begin(), max_vect.end());
@@ -223,6 +226,7 @@ void WhiteRobot::RunStrategy( double intialCash) {
         m_ma_large_long.resize(max_window_size,0);
 
         m_ma_small_short.resize(max_window_size,0);
+
         m_ma_medium_short.resize(max_window_size,0);
         m_ma_large_short.resize(max_window_size,0);
 
@@ -231,26 +235,29 @@ void WhiteRobot::RunStrategy( double intialCash) {
         m_state_signal.resize(max_window_size,0);
         m_order_signal.resize(max_window_size,0);
 
-        m_current_cash.resize(max_window_size,intialCash);
+        m_current_cash.resize(max_window_size,initialCash);
         m_cfd_units.resize(max_window_size,0);
         m_last_trade_investment.resize(max_window_size,0);
-        m_portfolio_value.resize(max_window_size,intialCash);
+        m_portfolio_value.resize(max_window_size,initialCash);
         m_trade_profit.resize(max_window_size,0);
 
         m_stop_loss.resize(max_window_size,0);
+        m_trail_stop_loss.resize(max_window_size, 0);
         m_point = max_window_size;
+
 
         // Loop over the tradable part of the dataset
         for (auto it = m_prices.begin() + max_window_size; it != m_prices.end(); ++it) {
             vector<double> prices_window;
             prices_window = vector<double>(it - max_window_size + 1, it + 1);
             generateSignals(prices_window);
-            if(m_point==403)
+            if(m_point==317)
             {std::cout<<"caught";}
-            m_order_signal.push_back(ws.whiteStateMachine(last_trade_investment, m_state, m_slope, m_point, m_slopeMin_long,
+            m_order_signal.push_back(ws.whiteStateMachine(last_trade_investment, m_state, m_slope, m_point, max_portfolio_val, m_slopeMin_long,
                                                           m_mode_long, m_ma_small_long, m_ma_medium_long, m_ma_large_long,
                                                           m_slopeMin_short, m_ma_small_short, m_ma_medium_short,
                                                           m_ma_large_short, m_mode_short, m_state_signal, m_portfolio_value, m_stop_loss,
+                                                          m_trail_stop_loss, m_long_trail_stop_loss, m_trail_stopLoss, m_short_trail_stop_loss,
                                                           m_long_stop_loss, m_stopLoss, m_short_stop_loss, m_prices));
 
             m_portfolio_value.push_back(ws.orderAnalyser(current_cash, last_trade_investment, cfd_units, m_order_signal,
@@ -263,7 +270,7 @@ void WhiteRobot::RunStrategy( double intialCash) {
 
         cout << " Strategy Impossible to execute" << endl;
 
-        // Fill everythong with 0 to avoid memory acces errors
+        // Fill everything with 0 to avoid memory access errors
         m_ma_small_long.resize(max_window_size, 0);
         m_ma_medium_long.resize(max_window_size,0);
         m_ma_large_long.resize(max_window_size,0);
@@ -277,17 +284,18 @@ void WhiteRobot::RunStrategy( double intialCash) {
         m_state_signal.resize(max_window_size,0);
         m_order_signal.resize(max_window_size,0);
 
-        m_current_cash.resize(max_window_size,intialCash);
+        m_current_cash.resize(max_window_size,initialCash);
         m_cfd_units.resize(max_window_size,0);
         m_last_trade_investment.resize(max_window_size,0);
-        m_portfolio_value.resize(max_window_size,intialCash);
+        m_portfolio_value.resize(max_window_size,initialCash);
         m_trade_profit.resize(max_window_size,0);
 
         m_stop_loss.resize(max_window_size,0);
+        m_trail_stop_loss.resize(max_window_size, 0);
         m_point = max_window_size;
         }
     }
-}
+
 
 
 
@@ -315,12 +323,14 @@ void WhiteRobot::printResults() {
 	cout << "Long trades: " << m_long_trades << endl;
 	cout << "Good long trades: " << m_good_long_trades << endl;
 	cout << "Long trades Profit: " << fixed << setprecision(2) << m_long_trades_profit << endl;
-	cout << "Activations of Long stop-loss: " << m_long_stop_loss << endl << endl;
+	cout << "Activations of Long stop-loss: " << m_long_stop_loss  << endl;
+	cout << "Activations of Trailing long stop-loss: " << m_long_trail_stop_loss << endl;
 
 	cout << "Short trades: " << m_short_trades << endl;
 	cout << "Good short trades: " << m_good_short_trades << endl;
 	cout << "Short trades profit: " << fixed << setprecision(2) << m_short_trades_profit << endl;
 	cout << "Activations of short stop-loss: " << m_short_stop_loss << endl << endl;
+    cout << "Activations of Trailing short stop-loss: " << m_short_trail_stop_loss << endl;
 
 	cout << endl << "Simulation Parameters:" << endl << endl;
 
@@ -341,6 +351,7 @@ void WhiteRobot::printResults() {
 	cout << "General strategy parameters: " << endl;
 	cout << "Slope points: " << m_slopePoints << endl;
 	cout << "Stop loss: " << fixed << setprecision(4) << m_stopLoss << endl;
+	cout << "Trail Stop Loss" << fixed << setprecision(4) << m_trail_stopLoss << endl;
 
 
 	cout << endl << "End of simulation Results." << endl << endl;
@@ -353,7 +364,7 @@ void WhiteRobot::saveSimulation(string fileName) {
 	ofstream file_out;
 
 	// File format:
-	//simulation_date, intial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit,long_stop_loss, short_trades, good_short_trades, short_trades_profit, short_stop_loss, small_ma_long, medium_ma_long, large_ma_long, min_slope_long, sm_mode_long, small_ma_short, medium_ma_short, large_ma_short, min_slope_short, sm_mode_short, slope_points, stop_loss
+	//simulation_date, initial_date, final_date, initial_index, final_index, index_return, initial_porfolio, final_porfolio, portfolio_return, long_trades, good_long_trades, long_trades_profit,long_stop_loss, short_trades, good_short_trades, short_trades_profit, short_stop_loss, small_ma_long, medium_ma_long, large_ma_long, min_slope_long, sm_mode_long, small_ma_short, medium_ma_short, large_ma_short, min_slope_short, sm_mode_short, slope_points, stop_loss
 
 
 	file_out.open(fileName, ios_base::app);
@@ -373,11 +384,13 @@ void WhiteRobot::saveSimulation(string fileName) {
 	file_out << m_good_long_trades << ",";
 	file_out << fixed << setprecision(2) << m_long_trades_profit << ",";
 	file_out << m_long_stop_loss << ",";
+	file_out << m_long_trail_stop_loss << ",";
 
 	file_out << m_short_trades << ",";
 	file_out << m_good_short_trades << ",";
 	file_out << fixed << setprecision(2) << m_short_trades_profit << ",";
 	file_out << m_short_stop_loss << ",";
+	file_out << m_short_trail_stop_loss << ",";
 
 	file_out << m_maPointsS_long << ",";
 	file_out << m_maPointsM_long << ",";
@@ -393,12 +406,13 @@ void WhiteRobot::saveSimulation(string fileName) {
 
 	file_out << m_slopePoints << ",";
 	file_out << fixed << setprecision(4) << m_stopLoss << endl;
+    file_out << fixed << setprecision(4) << m_trail_stopLoss << endl;
 
 	//cout << endl << "Simulation results added to: "<< fileName << endl;
 
 }
 
-// Genereate a new backtest simulation CSV data file
+// Generate a new backtest simulation CSV data file
 void WhiteRobot::saveSimulationData(string fileName) {
 
 	// Create an output filestream object
@@ -421,7 +435,8 @@ void WhiteRobot::saveSimulationData(string fileName) {
 	file_out << "portfolio_value" << ",";
 	file_out << "last_trade_investment" << ",";
 	file_out << "m_trade_profit" << " ,";
-	file_out << "stop_loss" << endl;
+	file_out << "stop_loss" << " ,";
+	file_out << "trail_stop_loss" << endl;
 
 
 	// write data to the file
@@ -442,7 +457,8 @@ void WhiteRobot::saveSimulationData(string fileName) {
 		file_out << m_portfolio_value[i] << ",";
 		file_out << m_last_trade_investment[i] << ",";
 		file_out << m_trade_profit[i] << ",";
-		file_out << m_stop_loss[i] << endl;
+		file_out << m_stop_loss[i] << ",";
+		file_out << m_trail_stop_loss[i] << endl;
 	}
 	// close the output file
 	file_out.close();
