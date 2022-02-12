@@ -139,13 +139,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="WhiteRobot.cpp" />
-    <ClCompile Include="RobotMenu.cpp" />
-    <ClCompile Include="WhiteRobotC.cpp" />
+    <ClCompile Include="Date.cpp" />
+    <ClCompile Include="Signal_Generator.cpp" />
+    <ClCompile Include="WhiteRobot.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="RobotMenu.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="WhiteRobotC.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="WhiteStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="WhiteRobot.h" />
-    <ClInclude Include="RobotMenu.h" />
+    <ClInclude Include="Date.h" />
+    <ClInclude Include="Signal_Generator.h" />
+    <ClInclude Include="WhiteRobot.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="RobotMenu.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="WhiteStrategy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
