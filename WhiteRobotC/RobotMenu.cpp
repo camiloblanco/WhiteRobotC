@@ -54,6 +54,7 @@ void RobotMenu::readLine(string& description) {
 void RobotMenu::testData() {
 	WhiteRobot robot;
 	robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+	//robot.loadData("index_data.csv");
 	clearConsole();
 	cout << "****************************************************************************" << endl;
 	cout << "			Test and print the data from the CSV File " << endl;
@@ -126,14 +127,16 @@ void RobotMenu::executeWhite () {
     if(StartDate != "N/A" || EndDate != "N/A")
     {
         robot.loadSelectedData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv",StartDate,EndDate);
+		//robot.loadSelectedData("index_data.csv", StartDate, EndDate);
     }
     else {
         robot.loadData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv");
+		//robot.loadData("index_data.csv");
     }
 	robot.RunStrategy(initialCash);
 	robot.printResults();
 	robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
-	robot.saveSimulationData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/portfolio_simulation.csv");
+	//robot.saveSimulationData("portfolio_simulation.csv");
 
 	menuPause();
 }
