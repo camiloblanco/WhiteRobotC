@@ -71,7 +71,7 @@ void RobotMenu::executeWhite () {
 
 	int slopePoints;
 	double stopLoss, initialCash, trailstopLoss;
-	string StartDate, EndDate;
+	string StartDate, EndDate, DateSelection;
 
 	clearConsole();
 	cout << "****************************************************************************" << endl;
@@ -111,20 +111,21 @@ void RobotMenu::executeWhite () {
 	cin >> stopLoss;
 	cout << "- Trial Stop-loss parameter (Example 0.05)" <<endl;
 	cin >> trailstopLoss;
-
-	cout <<endl<<" Date Parameters:";
-    cout<<endl<< "Enter Starting Date (YYYY-MM-DD HH::MM) or N/A "<<endl;
-    getline(cin>>ws,StartDate);
-    cout<<"Enter End Date (YYYY-MM-DD HH::MM) or N/A"<<endl;
-    getline(cin>>ws,EndDate);
-
-
+    cout << "Select 'Y' for Date Range else 'N'" <<endl;
+    cin >> DateSelection;
+    if(DateSelection == "Y" || DateSelection == "Yes" || DateSelection == "yes" || DateSelection == "YES") {
+        cout << endl << " Date Parameters:";
+        cout << endl << "Enter Starting Date (YYYY-MM-DD)" << endl;
+        getline(cin >> ws, StartDate);
+        cout << "Enter End Date (YYYY-MM-DD HH::MM)" << endl;
+        getline(cin >> ws, EndDate);
+    }
 	cout << "Please enter the initial cash investment (Example:1000) " << endl;
 	cin >> initialCash;
 	
 
 	WhiteRobot robot(maPointsS_long, maPointsM_long, maPointsL_long, slopeMin_long, mode_long, maPointsS_short, maPointsM_short, maPointsL_short, slopeMin_short, mode_short, slopePoints, stopLoss, trailstopLoss);
-    if(StartDate != "N/A" || EndDate != "N/A")
+    if(DateSelection == "Y" || DateSelection == "Yes" || DateSelection == "yes" || DateSelection == "YES")
     {
         robot.loadSelectedData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/index_data.csv",StartDate,EndDate);
 		//robot.loadSelectedData("index_data.csv", StartDate, EndDate);
@@ -136,6 +137,7 @@ void RobotMenu::executeWhite () {
 	robot.RunStrategy(initialCash);
 	robot.printResults();
 	robot.saveSimulation("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/simulations.csv");
+	robot.saveSimulationData("/Users/shankar/Desktop/WhiteRobotC/WhiteRobotC/portfolio_simulation.csv");
 	//robot.saveSimulationData("portfolio_simulation.csv");
 
 	menuPause();

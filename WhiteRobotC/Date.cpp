@@ -36,5 +36,6 @@ std::string Date::reformat_date()
             year.push_back(seglist[0][i]);
         }
     }
-    return year + '-' +month + '-' + day + " "+ seglist[1];
+      return year + '-' +month + '-' + day;
+    //return year + '-' +month + '-' + day + " "+ seglist[1];
 }

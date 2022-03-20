@@ -116,7 +116,7 @@ vector<string> WhiteRobot::tokenize(string& str, char delim) {
 		end = str.find(delim, start);
 		result.push_back(str.substr(start, end - start));
 	}
-
+	result.push_back(result[0].substr(0, result[0].find(' ', 0)));
 	return result;
 }
 
@@ -141,6 +141,7 @@ void WhiteRobot::loadData(string fileName) {
 			if (price > 0) {
 				m_dates.push_back(fields[0]);
 				m_prices.push_back(price);
+				m_dates_refined.push_back(fields[2]);
 			}
 		}
 		myStream.close();
@@ -154,7 +155,6 @@ void WhiteRobot::loadData(string fileName) {
 //Load Data based on Time Constraints
 void WhiteRobot:: loadSelectedData(string fileName, string from, string to) {
     string line;
-
     ifstream myStream(fileName);
     if (myStream.is_open()) {
         cout << endl << " " << fileName << " successfully opened." << line << endl;
@@ -166,18 +166,19 @@ void WhiteRobot:: loadSelectedData(string fileName, string from, string to) {
 
             //Parses the line
             vector<string> fields = tokenize(line, ',');
-            Date d(fields[0]);
+            Date d(fields[2]);
             string time = (d.reformat_date());
             double price = stod(fields[1]);
-            if (time == to)
-            {
+            if (time > to) {
                 break;
             }
+
             else if (time >= from) {
                 // Stores the read values
                 if (price > 0) {
                     m_dates.push_back(fields[0]);
                     m_prices.push_back(price);
+                    m_dates_refined.push_back(fields[2]);
                 }
             }
 
@@ -311,6 +312,9 @@ void WhiteRobot::printResults() {
 	cout << "Initial date: " << m_dates[0] << endl ;
 	cout << "Final date: " << m_dates.back() << endl << endl;
 
+	cout << "Initial date Refined: " << m_dates_refined[0] << endl;
+	cout << "Final date Refined: " << m_dates_refined.back() << endl;
+
 	cout << "Initial index: " << fixed << setprecision(2) << m_prices[0] << endl;
 	cout << "Final index: " << fixed << setprecision(2) << m_prices.back() << endl;
 	cout << "Index return: " << fixed << setprecision(2) << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << endl << endl;
@@ -373,6 +377,8 @@ void WhiteRobot::saveSimulation(string fileName) {
 	file_out << getTimeStr() << ",";
 	file_out << m_dates[0] << ",";
 	file_out << m_dates.back() << ",";
+    file_out << m_dates_refined[0] << ",";
+    file_out << m_dates_refined.back() << ",";
 	file_out << fixed << setprecision(2) << m_prices[0] << ",";
 	file_out << fixed << setprecision(2) << m_prices.back() << ",";
 	file_out << fixed << setprecision(2) << 100 * (m_prices.back() - m_prices[0]) / m_prices[0] << "%" << ",";

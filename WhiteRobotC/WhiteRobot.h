@@ -114,6 +114,7 @@ private:
 
 
 	vector<string> m_dates; // Contains all the asset class dates
+	vector<string> m_dates_refined; // Contains all asset class dates with hh:mm:ss removed
 	vector<double> m_prices; // Contains the closing prices of the asset class
 	vector<double> m_volume; // Contains the volume of the asset class
 
